@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Chores
+- **git:** Add Git Hook Templates
 - **git:** Initial git Setup
 
 

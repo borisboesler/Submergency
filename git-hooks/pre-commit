@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# a git pre-commit hook to format swift code
+# (c) 2022 Boris Boesler
+
+# for debugging/inspection purposses:
+#for line in $(printenv); do echo $line; done
+
+# remainders that there is something going on
+#say "pre committing"
+
+# set exit codes
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+
+
+#
+# tools
+#
+
+# switftformat
+SWIFT_FORMAT_EXE=swiftformat
+
+if ! which $SWIFT_FORMAT_EXE > /dev/null; then
+    echo "Dont have $SWIFT_FORMAT_EXE."
+    # exit SUCCESS to continue committing
+    exit $EXIT_SUCCESS
+fi
+
+# git-format-staged
+GIT_FORMAT_STAGED_EXE=git-format-staged
+
+if ! which $GIT_FORMAT_STAGED_EXE > /dev/null; then
+    echo "Dont have $GIT_FORMAT_STAGED_EXE."
+    # exit SUCCESS to continue committing
+    exit $EXIT_SUCCESS
+fi
+
+
+#
+# do format source code
+#
+
+GIT_FORMAT_STAGED_OPTIONS='--stdinpath "{}"'
+$GIT_FORMAT_STAGED_EXE --formatter "$SWIFT_FORMAT_EXE stdin $GIT_FORMAT_STAGED_OPTIONS" "*.swift"
+
+# finally exit with SUCCESS
+exit $EXIT_SUCCESS

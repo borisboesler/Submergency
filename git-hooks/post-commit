@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# a git post-commit hook
+# (c) 2022 Boris Boesler
+
+# for debugging/ispection purposses:
+#for line in $(printenv); do echo $line; done
+
+# remainder that there is something going on
+#say "post commiting"
+
+SYSTEM=$(uname -s)
+
+# set exit codes
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+
+#
+# tools
+#
+
+GITCHGLOG_EXE=git-chglog
+
+if ! which $GITCHGLOG_EXE > /dev/null; then
+    echo "Dont have $GITCHGLOG_EXE."
+    # exit SUCCESS to continue committing
+    exit $EXIT_SUCCESS
+fi
+
+PLISTBUDDY=/usr/libexec/PlistBuddy
+
+# ########################################
+
+#
+# a macOS specific function to extract a git tag and embed it in the
+# apps plist file as the version
+#
+copy_git_tag_into_plist()
+{
+    LOCKFILE=are-post-commiting.lock
+
+    if [ ! -e $LOCKFILE ] ; then
+	# touch lockfile
+	touch $LOCKFILE
+
+	# remainder that there is something going on
+	#say "post commiting"
+
+	# the plist file to be modified
+	plist_path=$(find ./ -type f -name "*.plist" -d 3)
+
+	# we use the basename of the branch name as short version, assuming
+	# that its format is release/x.y.z
+	release=$(basename $(git rev-parse --abbrev-ref HEAD))
+
+	# to be conform with some apple requirements (see above bundle
+	# version) we use release + hash
+	build=$release-$(git log --oneline HEAD^1.. | awk '{print $1 }')
+	# or
+	#build=$(git describe --tags --always --dirty)
+	# build=`git log -n1 --date=short --format="%ad (%h)"`
+
+	for plist in $plist_path; do
+	    $PLISTBUDDY -c "Set :CFBundleShortVersionString $release" "$plist"
+	    $PLISTBUDDY -c "Set :CFBundleVersion $build" "$plist"
+	done
+
+	# this is useless, because git commit --amend .. wil generate a new hash
+	## add all plist files for commiting
+	#for plist in $plist_path; do
+	#    git add $plist
+	#done
+	## commit
+	#git commit --amend --no-edit # endless loop
+
+	# rm lockfile
+	rm $LOCKFILE
+    fi
+}
+
+
+# ########################################
+
+#
+# create a changelog file after commiting with git-chglog
+# (https://github.com/git-chglog/git-chglog) in some format (currently
+# https://keepachangelog.com/)
+#
+create_changelog()
+{
+    $GitChglog_exe -o CHANGELOG.md
+}
+
+
+#
+# remind to create a changelog file after commiting
+#
+remind_changelog()
+{
+    echo "Dont't forget to run $GITCHGLOG_EXE -o CHANGELOG.md."
+}
+
+
+# ########################################
+
+#
+# run
+#
+# copy_git_tag_into_plist # we do this in a "Build Phase"
+#create_changelog
+remind_changelog
+
+# end-of-file
