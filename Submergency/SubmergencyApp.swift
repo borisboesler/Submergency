@@ -6,6 +6,12 @@
 //
 
 import SwiftUI
+import XCGLogger
+
+// MARK: - Global Variables
+
+/// Global logger
+let submergencyLogger = XCGLogger(identifier: "Submergency")
 
 @main
 struct SubmergencyApp: App {

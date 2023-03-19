@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2558DE0329C7895100284FB3 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 2558DE0229C7895100284FB3 /* XCGLogger */; };
 		2559BAAC29C733B00087C3A6 /* SubmergencyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2559BAAB29C733B00087C3A6 /* SubmergencyApp.swift */; };
 		2559BAAE29C733B00087C3A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2559BAAD29C733B00087C3A6 /* ContentView.swift */; };
 		2559BAB029C733B10087C3A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2559BAAF29C733B10087C3A6 /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2558DE0329C7895100284FB3 /* XCGLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +87,9 @@
 			dependencies = (
 			);
 			name = Submergency;
+			packageProductDependencies = (
+				2558DE0229C7895100284FB3 /* XCGLogger */,
+			);
 			productName = Submergency;
 			productReference = 2559BAA829C733B00087C3A6 /* Submergency.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +118,9 @@
 				Base,
 			);
 			mainGroup = 2559BA9F29C733B00087C3A6;
+			packageReferences = (
+				2558DE0129C7895100284FB3 /* XCRemoteSwiftPackageReference "XCGLogger" */,
+			);
 			productRefGroup = 2559BAA929C733B00087C3A6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -384,6 +392,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2558DE0129C7895100284FB3 /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger";
+			requirement = {
+				kind = exactVersion;
+				version = 7.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2558DE0229C7895100284FB3 /* XCGLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2558DE0129C7895100284FB3 /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = XCGLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2559BAA029C733B00087C3A6 /* Project object */;
 }
