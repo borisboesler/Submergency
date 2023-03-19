@@ -1,0 +1,62 @@
+style: none
+template: CHANGELOG.tpl.md
+info:
+  title: Submergency
+  repository_url: brettkiste:/Volumes/UsersSpace/boesler/projekte/git-repositories/Submergency.git
+options:
+  sort: date
+  commits:
+    filters:
+      Type:
+        - docs
+        - chore
+        - feat
+        - fix
+        - perf
+        - refactor
+        - style
+        - test
+
+  commit_groups:
+    group_by: Type
+    sort_by: Title
+    title_maps:
+      docs: Documentation
+      chore: Chores
+      feat: Features
+      fix: Bug Fixes
+      perf: Performance Improvements
+      refactor: Code Refactoring
+      style: Reformating
+      test: Tests
+
+  header:
+    pattern: "^(\\w*)(?:\\((.+)\\))?\\:\\s(.+)$"
+    pattern_maps:
+      - Type
+      - Scope
+      - Subject
+
+  issues:
+    prefix:
+      - "#"
+
+  refs:
+    actions:
+      - Closes
+      - Fixes
+
+  merges:
+    pattern: "^Merge branch ('.*'.*) into (.*)$"
+    pattern_maps:
+      - Source
+      - Ref
+
+  reverts:
+    pattern: "^Revert \"([\\s\\S]*)\"$"
+    pattern_maps:
+      - Header
+
+  notes:
+    keywords:
+      - BREAKING CHANGE
