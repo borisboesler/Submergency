@@ -8,18 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		2558DE0329C7895100284FB3 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 2558DE0229C7895100284FB3 /* XCGLogger */; };
+		2558DE0C29C9F8C300284FB3 /* HealthStoreInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2558DE0B29C9F8C300284FB3 /* HealthStoreInterface.swift */; };
+		2558DE0F29CDA03600284FB3 /* DiveSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2558DE0E29CDA03600284FB3 /* DiveSession.swift */; };
 		2559BAAC29C733B00087C3A6 /* SubmergencyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2559BAAB29C733B00087C3A6 /* SubmergencyApp.swift */; };
 		2559BAAE29C733B00087C3A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2559BAAD29C733B00087C3A6 /* ContentView.swift */; };
 		2559BAB029C733B10087C3A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2559BAAF29C733B10087C3A6 /* Assets.xcassets */; };
 		2559BAB329C733B10087C3A6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2559BAB229C733B10087C3A6 /* Preview Assets.xcassets */; };
+		25A7228929D02DF40010CD69 /* DiveSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A7228829D02DF40010CD69 /* DiveSessionManager.swift */; };
+		25A7228B29D036790010CD69 /* DiveSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A7228A29D036790010CD69 /* DiveSample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2558DE0929C9F6E400284FB3 /* Submergency.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Submergency.entitlements; sourceTree = "<group>"; };
+		2558DE0B29C9F8C300284FB3 /* HealthStoreInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStoreInterface.swift; sourceTree = "<group>"; };
+		2558DE0E29CDA03600284FB3 /* DiveSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSession.swift; sourceTree = "<group>"; };
 		2559BAA829C733B00087C3A6 /* Submergency.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Submergency.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2559BAAB29C733B00087C3A6 /* SubmergencyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmergencyApp.swift; sourceTree = "<group>"; };
 		2559BAAD29C733B00087C3A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2559BAAF29C733B10087C3A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2559BAB229C733B10087C3A6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		25A7228829D02DF40010CD69 /* DiveSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSessionManager.swift; sourceTree = "<group>"; };
+		25A7228A29D036790010CD69 /* DiveSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +43,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2558DE0829C9F5FD00284FB3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				25A7228A29D036790010CD69 /* DiveSample.swift */,
+				2558DE0E29CDA03600284FB3 /* DiveSession.swift */,
+				25A7228829D02DF40010CD69 /* DiveSessionManager.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2558DE0A29C9F88C00284FB3 /* Interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				2558DE0B29C9F8C300284FB3 /* HealthStoreInterface.swift */,
+			);
+			path = Interfaces;
+			sourceTree = "<group>";
+		};
+		2558DE0D29C9FC1D00284FB3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2559BAAD29C733B00087C3A6 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2559BA9F29C733B00087C3A6 = {
 			isa = PBXGroup;
 			children = (
@@ -53,8 +88,11 @@
 		2559BAAA29C733B00087C3A6 /* Submergency */ = {
 			isa = PBXGroup;
 			children = (
+				2558DE0929C9F6E400284FB3 /* Submergency.entitlements */,
 				2559BAAB29C733B00087C3A6 /* SubmergencyApp.swift */,
-				2559BAAD29C733B00087C3A6 /* ContentView.swift */,
+				2558DE0D29C9FC1D00284FB3 /* Views */,
+				2558DE0829C9F5FD00284FB3 /* Models */,
+				2558DE0A29C9F88C00284FB3 /* Interfaces */,
 				2559BAAF29C733B10087C3A6 /* Assets.xcassets */,
 				2559BAB129C733B10087C3A6 /* Preview Content */,
 			);
@@ -188,8 +226,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2558DE0F29CDA03600284FB3 /* DiveSession.swift in Sources */,
+				25A7228B29D036790010CD69 /* DiveSample.swift in Sources */,
+				2558DE0C29C9F8C300284FB3 /* HealthStoreInterface.swift in Sources */,
 				2559BAAE29C733B00087C3A6 /* ContentView.swift in Sources */,
 				2559BAAC29C733B00087C3A6 /* SubmergencyApp.swift in Sources */,
+				25A7228929D02DF40010CD69 /* DiveSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +357,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Submergency/Submergency.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Submergency/Preview Content\"";
@@ -322,6 +365,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Submergency/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit depth data is read to build a dive profile to export";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We do not write depth data to HealthKit";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -345,6 +390,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Submergency/Submergency.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Submergency/Preview Content\"";
@@ -352,6 +398,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Submergency/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit depth data is read to build a dive profile to export";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We do not write depth data to HealthKit";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
