@@ -52,124 +52,30 @@ class HealthStoreInterface {
                                      })
   }
 
-  ///
-  func readDepthTypeTMP() {
-    var diveNum = 1
-    var currentDiveStart: Date?
-    var lastDiveEnd: Date?
-    var diveDuration = 0.0
-
-    let status = healthStore!.authorizationStatus(for: underwaterDepthType!)
-    if true { // status == .sharingAuthorized /*this test is for writing, what is it for reading? */ {
-      // generate query to read depth data
-      let query = HKQuantitySeriesSampleQuery(quantityType: underwaterDepthType!,
-                                              predicate: nil) { _, depth, dates, _, _, error in
-
-        if error != nil {
-          smLogger.info(error.debugDescription)
-        }
-        guard let depth = depth
-        else {
-          return
-        }
-
-        if let currentDiveDates = dates {
-          // start of dive
-          if currentDiveStart == nil {
-            currentDiveStart = currentDiveDates.start
-            lastDiveEnd = currentDiveDates.start
-          }
-          // increment duration
-          diveDuration += currentDiveDates.duration
-
-          // if lastEndDate is not same as this this start then start new dive
-          // let diffSeconds = currentDiveDates.start.timeIntervalSinceReferenceDate - lastDiveEnd!.timeIntervalSinceReferenceDate
-          let diffSeconds = currentDiveDates.start.timeIntervalSince(lastDiveEnd!)
-          let maxDivesessionDistance = 15.0 * 60.0 // 15 minutes difference
-          // smLogger.info("diffSeconds: \(diffSeconds)")
-          if diffSeconds < maxDivesessionDistance {
-            // attach current sample to current dive profile
-            smLogger.info(" start date: \(currentDiveDates.start) end date: \(currentDiveDates.end) depth: \(depth.doubleValue(for: HKUnit.meter()))")
-            // smLogger.info(" duration: \(currentDiveDates.duration)")
-            lastDiveEnd = currentDiveDates.end
-          } else {
-            // dive #diveNum: start: currentDiveStart end: dates!.end duration: duration
-            smLogger.info("dive #\(diveNum) start: \(currentDiveStart!) end: \(currentDiveDates.end) duration: \(diveDuration)")
-            // smLogger.info("** start new dive \(diveNum + 1).")
-            // inc dive count
-            diveNum += 1
-            // reset
-            currentDiveStart = nil
-            lastDiveEnd = nil
-            diveDuration = 0.0
-          }
-        }
-      }
-
-      healthStore!.execute(query)
-    } else {
-      smLogger.info("no authorization \(status) to read depth.")
-    }
-  }
-
-  func readDepthType(completion: @escaping (DiveSample?) -> Void) {
-    var sessionList: [DiveSession] = []
-    var lastDiveSample: DiveSample?
-    var sessionCounter: UInt = 1
-    var currentDiveSession: DiveSession?
-    // 15min break between sessions
-    let maxSessionDifference = 60.0 * 15.0
+  func readDepthType(completion: @escaping (DiveSample) -> Void) {
+    // TODO: generators of data: HKSourceQuery
     // generate query to read depth data
     let query = HKQuantitySeriesSampleQuery(quantityType: underwaterDepthType!,
-                                            predicate: nil) { _, depth, dates, _, _, error in
+                                            predicate: nil) { _, depth, dateInterval, _, _, error in
       if let error = error {
         smLogger.debug("\(error)")
-        completion(nil)
+        // completion(nil)
         return
       }
       guard let depth = depth
       else {
-        completion(nil)
+        smLogger.debug("fail on depth \(depth)")
+        // completion(nil)
         return
       }
 
       // bypass nil check
-      if let sampleDates = dates {
-        // if the session list is empty, then generate a session, because we have data
-        if sessionList.isEmpty {
-          currentDiveSession = DiveSession(id: sessionCounter)
-          sessionList.append(currentDiveSession!)
-          sessionCounter += 1
-        }
-
-        // do we have to start a new session?
-        if let lastDiveSample = lastDiveSample {
-          // yes: create a new dive session with current samples, add
-          // this dive session to list of session and clear current dive
-          // sample list
-          if sampleDates.start.timeIntervalSince(lastDiveSample.end) > maxSessionDifference {
-            // log old session
-            // currentDiveSession!.log()
-            // create a new session
-            //smLogger.debug("create new session \(sessionCounter) #sessions:\(sessionList.count)")
-            currentDiveSession = DiveSession(id: sessionCounter)
-            sessionList.append(currentDiveSession!)
-            sessionCounter += 1
-          } else {
-            // keep old session
-          }
-        } else {
-          // no previous lastDiveSample, append to current session
-        }
-
+      if let sampleDates = dateInterval {
         // create a divesample
-        //smLogger.debug("create new sample \(sampleDates.start) \(sampleDates.end) \(depth.doubleValue(for: HKUnit.meter()))")
-        lastDiveSample = DiveSample(start: sampleDates.start, end: sampleDates.end, depth: depth.doubleValue(for: HKUnit.meter()))
-        currentDiveSession!.profile.append(lastDiveSample!)
+        let diveSample = DiveSample(start: sampleDates.start, end: sampleDates.end,
+                                    depth: depth.doubleValue(for: HKUnit.meter()))
+        completion(diveSample)
       } // if let sampleDates = dates
-
-      //completion(sessionList)
-      completion(lastDiveSample)
     } // let query
 
     // execute query (asyncroniously)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DiveSessionManager {
+class DiveSessionManager {
   /// all dive samples
   private var samples: [DiveSample] = []
   /// all dive sample are organized in dive sessions
@@ -17,29 +17,37 @@ struct DiveSessionManager {
   init() {}
 
   /// add a sample to the manager and add it to the relevnt session or create a new dive session
-  mutating func add(sample: DiveSample, timeOffset: Double) -> Bool {
+  func add(sample: DiveSample, maxSecondDelta: Double) {
     // add sample
     samples.append(sample)
+
+    smLogger.debug("--")
+    smLogger.debug("start:\(sample.start) end:\(sample.end) depth: \(sample.depth)")
+
     // search a dive session to which this sample belongs to
     for var session in sessions
-      where session.start < sample.start
-    && session.end.timeIntervalSince(sample.end) < timeOffset {
-        // add sample to session and return true
+      // appending a sample to a session
+      where (sample.start.timeIntervalSinceReferenceDate >= session.start.timeIntervalSinceReferenceDate)
+      && (sample.start.timeIntervalSinceReferenceDate - maxSecondDelta <= session.end.timeIntervalSinceReferenceDate) {
+      smLogger.debug("add sample to session \(session.id) size:\(session.profile.count)")
+      smLogger.debug("session end:\(session.end) vs. sample start:\(sample.start)")
+      smLogger.debug("diff:\(sample.start.timeIntervalSinceReferenceDate - session.end.timeIntervalSinceReferenceDate) < \(maxSecondDelta)")
+      // add sample to session and return true
       session.add(sample: sample)
-      return true
-      }
+      return
+    }
     // add a new session and add sample to new session
-    var session = DiveSession(id: UInt(sessions.count + 1))
-    session.add(sample: sample)
-
-    return true
+    let session = DiveSession(ident: UInt(sessions.count + 1), sample: sample)
+    smLogger.debug("add sample to new session \(session.id)")
+    sessions.append(session)
   }
 
-  /// log
+  // TODO: rebuild sessions from samples
+
+  /// log a sample via XCG logger
   func log() {
-    smLogger.debug("dive session \(id):")
     for session in sessions {
-      sessions.log()
+      session.log()
     }
   }
 }

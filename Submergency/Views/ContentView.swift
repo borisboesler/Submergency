@@ -5,9 +5,9 @@
 //  Created by Boris Boesler on 19.03.23.
 //
 
+import Foundation
 import HealthKit
 import SwiftUI
-import Foundation
 
 private let bundleVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "no build"
 private let bundleShortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "no version"
@@ -16,7 +16,9 @@ private let bundleShortVersion = Bundle.main.infoDictionary?["CFBundleShortVersi
 
 struct ContentView: View {
   private var healthStore: HealthStoreInterface?
-
+  private var diveSessionManager: DiveSessionManager?
+  /// TODO: make maxSecondDelta editable in GUI
+  let maxSecondDelta = 15.0 * 60.0
   var body: some View {
     VStack {
       Image(systemName: "globe")
@@ -25,6 +27,15 @@ struct ContentView: View {
       Text("Hello, \(NSFullUserName())!")
       Text("Version: \(bundleShortVersion)")
       Text("Bundle version: \(bundleVersion)")
+
+      Spacer()
+
+      Button("Dump") {
+        print("dump")
+        diveSessionManager!.log()
+      }
+
+      Spacer()
     }
     .padding()
   } // var body
@@ -34,27 +45,23 @@ struct ContentView: View {
   init() {
     smLogger.info("init")
     healthStore = HealthStoreInterface()
-    initialization()
-  }
+    diveSessionManager = DiveSessionManager()
 
-  private func initialization() {
-    smLogger.info("initialization")
     if let healthStore = healthStore {
-      healthStore.requestAuthorization { success in
-        if success {
-          //healthStore.readGenderType()
-          healthStore.readDepthType() { query in
-//            for session in query {
-//              session.log()
-//            }
-            query?.log()
+      if var diveSessionManager = diveSessionManager {
+        healthStore.requestAuthorization { success in
+          if success {
+            healthStore.readDepthType { query in
+              // TODO: use maxSecondDelta here
+              diveSessionManager.add(sample: query, maxSecondDelta: 15.0 * 60.0)
+            }
+          } else {
+            smLogger.info(" ContentView.requestAuthorization failed")
           }
-        } else {
-          smLogger.info(" ContentView.requestAuthorization failed")
         }
       }
     }
-  } // private func initilization()
+  }
 }
 
 // MARK: - ContentView_Previews

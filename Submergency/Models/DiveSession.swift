@@ -10,39 +10,39 @@ import Foundation
 // MARK: - DiveSession
 
 /// A DiveSession represents
-struct DiveSession {
-  /// General nu,ber
-  var id: UUID
-  /// The dive profile during this dive session
+class DiveSession {
+  /// General number
+  var id: UInt
+  /// The dive profile during this dive session. the surface samples are missing and
+  /// must be added manually during all kinds of dumps
   var profile: [DiveSample] = []
-  /// computed properties; empty profile not allowed
+
+  /// computed properties: start of first sample; empty profile not allowed
   var start: Date {
     profile.first!.start
   }
 
+  /// computed properties: end of last sample; empty profile not allowed
   var end: Date {
     profile.last!.end
   }
 
   /// Initializer of a DiveSession
   /// - Parameter id: a general identifier
-  /// - Parameter profile: The dive profile during this session
-  internal init(id _: UInt, profile: [DiveSample] = []) {
-    id = UUID()
-    self.profile = profile
-  }
-
-  /// Initializer of a DiveSession
-  /// - Parameter id: a general identifier
-  internal init(id _: UInt) {
-    id = UUID()
-    profile = []
-  }
-
-  mutating func add(sample: DiveSample) {
+  /// - Parameter sample: the first dive sample
+  internal init(ident: UInt, sample: DiveSample) {
+    id = ident
+    // profile = []
     profile.append(sample)
   }
 
+  /// add a sample to a session
+  /// - Parameter sample: the sample to be added
+  func add(sample: DiveSample) {
+    profile.append(sample)
+  }
+
+  /// log a sample via XCG logger
   func log() {
     smLogger.debug("dive session \(id) size: \(profile.count):")
     for sample in profile {

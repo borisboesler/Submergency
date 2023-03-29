@@ -10,7 +10,7 @@ import Foundation
 // MARK: - DiveSample
 
 /// A DiveSample represents a time interval at a certain depth
-struct DiveSample {
+class DiveSample {
   /// The start of this dive sample
   var start: Date
   /// The end of this dive sample
@@ -30,6 +30,7 @@ struct DiveSample {
     self.depth = depth
   }
 
+  /// log a sample via XCG logger
   func log() {
     smLogger.debug("from: \(start) to \(end) \(depth)m")
   }
