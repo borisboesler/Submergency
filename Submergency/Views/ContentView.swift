@@ -15,8 +15,7 @@ private let bundleShortVersion = Bundle.main.infoDictionary?["CFBundleShortVersi
 // MARK: - ContentView
 
 struct ContentView: View {
-  private var healthStore: HealthStoreInterface?
-  private var diveSessionManager: DiveSessionManager?
+  @EnvironmentObject var diveSessionManager: DiveSessionManager
   /// TODO: make maxSecondDelta editable in GUI
   let maxSecondDelta = 15.0 * 60.0
   var body: some View {
@@ -24,50 +23,42 @@ struct ContentView: View {
       Image(systemName: "globe")
         .imageScale(.large)
         .foregroundColor(.accentColor)
-      Text("Hello, \(NSFullUserName())!")
+      // Text("Hello, \(NSFullUserName())!")
       Text("Version: \(bundleShortVersion)")
       Text("Bundle version: \(bundleVersion)")
 
       Spacer()
-
       Button("Dump") {
         print("dump")
-        diveSessionManager!.log()
+        diveSessionManager.log()
       }
-
       Spacer()
+
+      if diveSessionManager.sessions.count > 0 {
+        List(diveSessionManager.sessions, id: \.self) { diveSession in
+          // NavigationLink(destination: DiveExportView(dive: dive, temps: HKViewModel.temps)) {
+          DiveSessionRowView(diveSession: diveSession)
+          // }
+        }
+      } else {
+        Spacer()
+        Text("No dive data in HealthKit").fontWeight(.bold)
+        Spacer()
+      }
     }
     .padding()
+    .onAppear {
+      diveSessionManager.readDiveDepths(maxSecondDelta: maxSecondDelta)
+    }
   } // var body
 
   // MARK: - methods
-
-  init() {
-    smLogger.info("init")
-    healthStore = HealthStoreInterface()
-    diveSessionManager = DiveSessionManager()
-
-    if let healthStore = healthStore {
-      if var diveSessionManager = diveSessionManager {
-        healthStore.requestAuthorization { success in
-          if success {
-            healthStore.readDepthType { query in
-              // TODO: use maxSecondDelta here
-              diveSessionManager.add(sample: query, maxSecondDelta: 15.0 * 60.0)
-            }
-          } else {
-            smLogger.info(" ContentView.requestAuthorization failed")
-          }
-        }
-      }
-    }
-  }
 }
 
 // MARK: - ContentView_Previews
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView()
+    ContentView().environmentObject(DiveSessionManager())
   }
 }

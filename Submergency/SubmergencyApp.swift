@@ -19,7 +19,7 @@ let smLogger = XCGLogger(identifier: "Submergency")
 struct SubmergencyApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      ContentView().environmentObject(DiveSessionManager())
     }
   }
 }

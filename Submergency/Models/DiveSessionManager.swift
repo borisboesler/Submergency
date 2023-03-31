@@ -7,11 +7,13 @@
 
 import Foundation
 
-class DiveSessionManager {
+class DiveSessionManager: ObservableObject {
+  /// the session manager receives its dive from the HealthStore
+  private var healthStore = HealthStoreInterface()
   /// all dive samples
   private var samples: [DiveSample] = []
   /// all dive sample are organized in dive sessions
-  private var sessions: [DiveSession] = []
+  @Published var sessions: [DiveSession] = []
 
   /// initializer
   init() {}
@@ -40,6 +42,21 @@ class DiveSessionManager {
     let session = DiveSession(ident: UInt(sessions.count + 1), sample: sample)
     smLogger.debug("add sample to new session \(session.id)")
     sessions.append(session)
+  }
+
+  func readDiveDepths(maxSecondDelta: Double) {
+    smLogger.info("init")
+
+    healthStore.requestAuthorization { success in
+      if success {
+        self.healthStore.readDepthType { query in
+          // TODO: use maxSecondDelta here
+          self.add(sample: query, maxSecondDelta: maxSecondDelta)
+        }
+      } else {
+        smLogger.info(" ContentView.requestAuthorization failed")
+      }
+    }
   }
 
   // TODO: rebuild sessions from samples

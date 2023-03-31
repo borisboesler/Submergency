@@ -8,6 +8,10 @@
 - **git:** Add Git Hook Templates
 - **git:** Initial git Setup
 
+### Features
+- Read Dive Depth And Display Session List
+- Read Dive Depths From HealthKit
+
 
 <a name="Version/0.0.0"></a>
 ## Version/0.0.0 - 2023-03-19

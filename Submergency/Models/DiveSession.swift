@@ -10,7 +10,7 @@ import Foundation
 // MARK: - DiveSession
 
 /// A DiveSession represents
-class DiveSession {
+class DiveSession: ObservableObject, Hashable, Equatable {
   /// General number
   var id: UInt
   /// The dive profile during this dive session. the surface samples are missing and
@@ -42,11 +42,38 @@ class DiveSession {
     profile.append(sample)
   }
 
+  func maxDepth() -> Double {
+    var maxDepth = 0.0
+
+    for sample in profile where sample.depth > maxDepth {
+      maxDepth = sample.depth
+    }
+    return maxDepth
+  }
+
+  func duration() -> Double {
+    return profile.last!.end.timeIntervalSinceReferenceDate - profile.first!.start.timeIntervalSinceReferenceDate
+  }
+
   /// log a sample via XCG logger
   func log() {
     smLogger.debug("dive session \(id) size: \(profile.count):")
     for sample in profile {
       sample.log()
     }
+  }
+
+  // MARK: - Protocol Hashable
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(start)
+  }
+
+  // MARK: - Protocol Equatable
+
+  static func == (lhs: DiveSession, rhs: DiveSession) -> Bool {
+    return lhs.start == rhs.start
+      && lhs.end == rhs.end
+      && lhs.profile.count == rhs.profile.count
   }
 }
