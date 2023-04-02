@@ -1,8 +1,8 @@
 --acronyms ID,URL,UUID
 --allman false
 --assetliterals visual-width
---asynccapturing 
---beforemarks 
+--asynccapturing
+--beforemarks
 --binarygrouping 4,8
 --categorymark "MARK: %c"
 --classthreshold 0
@@ -23,7 +23,7 @@
 --fractiongrouping disabled
 --fragment false
 --funcattributes preserve
---generictypes 
+--generictypes
 --groupedextension "MARK: %c"
 --guardelse auto
 --header ignore
@@ -34,17 +34,17 @@
 --indent 2
 --indentcase false
 --indentstrings false
---lifecycle 
+--lifecycle
 --lineaftermarks true
 --linebreaks lf
 --markcategories true
 --markextensions always
 --marktypes always
 --maxwidth none
---modifierorder 
---nevertrailing 
---nospaceoperators 
---nowrapoperators 
+--modifierorder
+--nevertrailing
+--nospaceoperators
+--nowrapoperators
 --octalgrouping 4,8
 --operatorfunc spaced
 --organizetypes class,enum,struct
@@ -52,7 +52,7 @@
 --ranges spaced
 --redundanttype inferred
 --self remove
---selfrequired 
+--selfrequired
 --semicolons inline
 --shortoptionals always
 --smarttabs enabled
@@ -60,8 +60,8 @@
 --stripunusedargs always
 --structthreshold 0
 --tabwidth unspecified
---throwcapturing 
---trailingclosures 
+--throwcapturing
+--trailingclosures
 --trimwhitespace always
 --typeattributes preserve
 --typeblanklines remove

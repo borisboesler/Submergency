@@ -11,13 +11,15 @@ import XCGLogger
 // MARK: - Global Variables
 
 /// Global logger
-let submergencyLogger = XCGLogger(identifier: "Submergency")
+let smLogger = XCGLogger(identifier: "Submergency")
+
+// MARK: - SubmergencyApp
 
 @main
 struct SubmergencyApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      ContentView().environmentObject(DiveSessionManager())
     }
   }
 }

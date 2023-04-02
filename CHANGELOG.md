@@ -4,9 +4,16 @@
 <a name="Unreleased"></a>
 ## [Unreleased]
 
+### Bug Fixes
+- Push Changes In Background
+
 ### Chores
 - **git:** Add Git Hook Templates
 - **git:** Initial git Setup
+
+### Features
+- Read Dive Depth And Display Session List
+- Read Dive Depths From HealthKit
 
 
 <a name="Version/0.0.0"></a>
