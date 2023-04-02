@@ -12,6 +12,8 @@
 - **git:** Initial git Setup
 
 ### Features
+- Add Profile Graph
+- Small GUI With Navigation
 - Read Dive Depth And Display Session List
 - Read Dive Depths From HealthKit
 

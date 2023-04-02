@@ -23,9 +23,9 @@ struct ContentView: View {
       VStack {
         if diveSessionManager.sessions.count > 0 {
           List(diveSessionManager.sessions, id: \.self) { diveSession in
-            // NavigationLink(destination: DiveExportView(dive: dive, temps: HKViewModel.temps)) {
-            DiveSessionRowView(diveSession: diveSession)
-            // }
+            NavigationLink(destination: DiveSessionView(diveSession: diveSession)) {
+              DiveSessionRowView(diveSession: diveSession)
+            }
           }
         } else {
           Spacer()

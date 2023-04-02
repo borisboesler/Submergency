@@ -10,9 +10,14 @@ import Foundation
 // MARK: - DiveSession
 
 /// A DiveSession represents
-class DiveSession: ObservableObject, Hashable, Equatable {
+/// ObservableObject for ..
+/// Hashable for ..
+/// Equatable for ..
+/// Identifiable for plotting
+class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
   /// General number
-  var id: UInt
+  let id = UUID()
+
   /// The dive profile during this dive session. the surface samples are missing and
   /// must be added manually during all kinds of dumps
   var profile: [DiveSample] = []
@@ -30,8 +35,7 @@ class DiveSession: ObservableObject, Hashable, Equatable {
   /// Initializer of a DiveSession
   /// - Parameter id: a general identifier
   /// - Parameter sample: the first dive sample
-  internal init(ident: UInt, sample: DiveSample) {
-    id = ident
+  internal init(ident _: UInt, sample: DiveSample) {
     // profile = []
     profile.append(sample)
   }
@@ -51,7 +55,7 @@ class DiveSession: ObservableObject, Hashable, Equatable {
     return maxDepth
   }
 
-  func duration() -> Double {
+  func duration() -> TimeInterval {
     return profile.last!.end.timeIntervalSinceReferenceDate - profile.first!.start.timeIntervalSinceReferenceDate
   }
 
