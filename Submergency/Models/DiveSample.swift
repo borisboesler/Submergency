@@ -10,7 +10,8 @@ import Foundation
 // MARK: - DiveSample
 
 /// A DiveSample represents a time interval at a certain depth
-class DiveSample {
+/// Identifiable for plotting
+class DiveSample: Identifiable {
   /// The start of this dive sample
   var start: Date
   /// The end of this dive sample

@@ -10,8 +10,11 @@ import XCGLogger
 
 // MARK: - Global Variables
 
+/// Global Application name
+let appName = "Submergency"
+
 /// Global logger
-let smLogger = XCGLogger(identifier: "Submergency")
+let smLogger = XCGLogger(identifier: appName)
 
 // MARK: - SubmergencyApp
 
