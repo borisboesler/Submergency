@@ -23,24 +23,30 @@ class DiveSessionManager: ObservableObject {
     // add sample
     samples.append(sample)
 
-    smLogger.debug("--")
-    smLogger.debug("start:\(sample.start) end:\(sample.end) depth: \(sample.depth)")
+    #if DEBUG
+      smLogger.debug("--")
+      smLogger.debug("start:\(sample.start) end:\(sample.end) depth: \(sample.depth)")
+    #endif
 
     // search a dive session to which this sample belongs to
     for var session in sessions
       // appending a sample to a session
       where (sample.start.timeIntervalSinceReferenceDate >= session.start.timeIntervalSinceReferenceDate)
       && (sample.start.timeIntervalSinceReferenceDate - maxSecondDelta <= session.end.timeIntervalSinceReferenceDate) {
-      smLogger.debug("add sample to session \(session.id) size:\(session.profile.count)")
-      smLogger.debug("session end:\(session.end) vs. sample start:\(sample.start)")
-      smLogger.debug("diff:\(sample.start.timeIntervalSinceReferenceDate - session.end.timeIntervalSinceReferenceDate) < \(maxSecondDelta)")
+      #if DEBUG
+        smLogger.debug("add sample to session \(session.id) size:\(session.profile.count)")
+        smLogger.debug("session end:\(session.end) vs. sample start:\(sample.start)")
+        smLogger.debug("diff:\(sample.start.timeIntervalSinceReferenceDate - session.end.timeIntervalSinceReferenceDate) < \(maxSecondDelta)")
+      #endif
       // add sample to session and return true
       session.add(sample: sample)
       return
     }
     // add a new session and add sample to new session
     let session = DiveSession(ident: UInt(sessions.count + 1), sample: sample)
-    smLogger.debug("add sample to new session \(session.id)")
+    #if DEBUG
+      smLogger.debug("add sample to new session \(session.id)")
+    #endif
     sessions.append(session)
   }
 

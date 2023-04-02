@@ -12,24 +12,31 @@ import SwiftUI
 struct DiveSessionRowView: View {
   let diveSession: DiveSession
 
+  /// local date formatter for this view
   static let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd/MM/yyyy hh:mm a"
+    formatter.locale = Locale.autoupdatingCurrent
+    formatter.dateStyle = .short
+    formatter.timeStyle = .short
     return formatter
   }()
 
   var body: some View {
+    // TODO: this looks different in the simulator and on the device
     let duration = Int((diveSession.duration() + 59.0) / 60.0)
     HStack {
       Text(DiveSessionRowView.dateFormatter.string(from: diveSession.start))
-        .frame(width: 180, alignment: .leading)
+        .frame(width: 150, alignment: .leading)
 
       Text("\(duration)min")
-        .frame(width: 50, alignment: .trailing)
+        .frame(width: 70, alignment: .trailing)
 
       Text(String(format: "%.1fm", diveSession.maxDepth()))
-        .frame(width: 50, alignment: .trailing)
+        .frame(width: 60, alignment: .trailing)
     }
+    #if DEBUG
+      .background(Color.yellow)
+    #endif
   }
 }
 
@@ -39,7 +46,7 @@ struct DiveRowView_Previews: PreviewProvider {
   static var previews: some View {
     DiveSessionRowView(diveSession: DiveSession(ident: 0,
                                                 sample: DiveSample(start: Date.now,
-                                                                   end: Date.now,
-                                                                   depth: 1.234)))
+                                                                   end: Date.now.addingTimeInterval(100.0 * 60.0),
+                                                                   depth: 100.234)))
   }
 }

@@ -19,37 +19,54 @@ struct ContentView: View {
   /// TODO: make maxSecondDelta editable in GUI
   let maxSecondDelta = 15.0 * 60.0
   var body: some View {
-    VStack {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundColor(.accentColor)
-      // Text("Hello, \(NSFullUserName())!")
-      Text("Version: \(bundleShortVersion)")
-      Text("Bundle version: \(bundleVersion)")
-
-      Spacer()
-      Button("Dump") {
-        print("dump")
-        diveSessionManager.log()
-      }
-      Spacer()
-
-      if diveSessionManager.sessions.count > 0 {
-        List(diveSessionManager.sessions, id: \.self) { diveSession in
-          // NavigationLink(destination: DiveExportView(dive: dive, temps: HKViewModel.temps)) {
-          DiveSessionRowView(diveSession: diveSession)
-          // }
+    NavigationView {
+      VStack {
+        if diveSessionManager.sessions.count > 0 {
+          List(diveSessionManager.sessions, id: \.self) { diveSession in
+            // NavigationLink(destination: DiveExportView(dive: dive, temps: HKViewModel.temps)) {
+            DiveSessionRowView(diveSession: diveSession)
+            // }
+          }
+        } else {
+          Spacer()
+          Text("No dive data in HealthKit").fontWeight(.bold)
+          Spacer()
         }
-      } else {
-        Spacer()
-        Text("No dive data in HealthKit").fontWeight(.bold)
-        Spacer()
       }
-    }
-    .padding()
-    .onAppear {
-      diveSessionManager.readDiveDepths(maxSecondDelta: maxSecondDelta)
-    }
+      #if DEBUG
+        .background(Color.red)
+      #endif
+        .padding()
+        .onAppear {
+          diveSessionManager.readDiveDepths(maxSecondDelta: maxSecondDelta)
+        }
+        .navigationBarTitle(appName)
+      #if DEBUG
+        .navigationBarItems(
+          leading:
+          Button(action: {
+            diveSessionManager.log()
+          }, label: { Text("Dump") }),
+          trailing:
+          NavigationLink(destination: AboutView()) {
+            HStack {
+              Image(systemName: "info.circle")
+                .imageScale(.large)
+            }
+          }
+        )
+      #else
+          .navigationBarItems(
+            trailing:
+            NavigationLink(destination: AboutView()) {
+              HStack {
+                Image(systemName: "info.circle")
+                  .imageScale(.large)
+              }
+            }
+          )
+      #endif
+    } // NavigationView
   } // var body
 
   // MARK: - methods
