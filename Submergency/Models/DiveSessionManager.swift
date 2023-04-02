@@ -50,8 +50,9 @@ class DiveSessionManager: ObservableObject {
     healthStore.requestAuthorization { success in
       if success {
         self.healthStore.readDepthType { query in
-          // TODO: use maxSecondDelta here
-          self.add(sample: query, maxSecondDelta: maxSecondDelta)
+          DispatchQueue.main.async {
+            self.add(sample: query, maxSecondDelta: maxSecondDelta)
+          }
         }
       } else {
         smLogger.info(" ContentView.requestAuthorization failed")

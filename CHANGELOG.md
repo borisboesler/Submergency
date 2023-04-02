@@ -4,6 +4,9 @@
 <a name="Unreleased"></a>
 ## [Unreleased]
 
+### Bug Fixes
+- Push Changes In Background
+
 ### Chores
 - **git:** Add Git Hook Templates
 - **git:** Initial git Setup
