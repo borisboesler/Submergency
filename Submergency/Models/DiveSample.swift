@@ -31,6 +31,8 @@ class DiveSample: Identifiable {
     self.depth = depth
   }
 
+  // MARK: - Logging
+
   /// log a sample via XCG logger
   func log() {
     smLogger.debug("from: \(start) to \(end) \(depth)m")

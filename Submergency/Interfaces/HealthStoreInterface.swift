@@ -14,9 +14,7 @@ class HealthStoreInterface {
   /// our private access to health data
   private var healthStore: HKHealthStore?
 
-  /// some characteristics to read and write
-  let genderCharacteristic
-    = HKCharacteristicType.characteristicType(forIdentifier: HKCharacteristicTypeIdentifier.biologicalSex)
+  ///  dive depth characteristics to read
   let underwaterDepthType
     = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.underwaterDepth)
 
@@ -35,9 +33,7 @@ class HealthStoreInterface {
   func requestAuthorization(completion: @escaping (Bool) -> Void) {
     smLogger.info("request authorization ")
 
-    // let hkCharacteristicTypesToRead: Set<HKCharacteristicType>? = [genderCharacteristic!]
     let hkTypesToRead: Set<HKObjectType> = [underwaterDepthType!]
-    // let hkTypesToWrite: Set<HKSampleType> = [bodyMass]
 
     guard let healthStore = healthStore else { return completion(false) }
 
@@ -59,13 +55,11 @@ class HealthStoreInterface {
                                             predicate: nil) { _, depth, dateInterval, _, _, error in
       if let error = error {
         smLogger.debug("\(error)")
-        // completion(nil)
         return
       }
       guard let depth = depth
       else {
-        smLogger.debug("fail on depth \(depth)")
-        // completion(nil)
+        smLogger.debug("fail on depth")
         return
       }
 
@@ -81,26 +75,4 @@ class HealthStoreInterface {
     // execute query (asyncroniously)
     healthStore!.execute(query)
   }
-
-  /// read gender data
-  func readGenderType() {
-    let status = healthStore!.authorizationStatus(for: genderCharacteristic!)
-    if status == .sharingAuthorized {
-      do {
-        let genderType = try healthStore?.biologicalSex()
-
-        if genderType?.biologicalSex == .female {
-          smLogger.info("Gender is female.")
-        } else if genderType?.biologicalSex == .male {
-          smLogger.info("Gender is male.")
-        } else {
-          smLogger.info("Gender is unspecified.")
-        }
-      } catch {
-        smLogger.info("Error looking up gender.")
-      }
-    } else {
-      smLogger.info("no authorization to read gender.")
-    }
-  } // end func readGenderType
 }

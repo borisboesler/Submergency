@@ -73,8 +73,7 @@ struct DiveSessionView: View {
 
 struct DiveSessionView_Previews: PreviewProvider {
   static var previews: some View {
-    DiveSessionView(diveSession: DiveSession(ident: 42,
-                                             sample: DiveSample(start: Date.now,
+    DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
                                                                 end: Date.now.addingTimeInterval(10.0),
                                                                 depth: 12.234)))
   }

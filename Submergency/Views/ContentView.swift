@@ -9,15 +9,12 @@ import Foundation
 import HealthKit
 import SwiftUI
 
-private let bundleVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "no build"
-private let bundleShortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "no version"
-
 // MARK: - ContentView
 
 struct ContentView: View {
-  @EnvironmentObject var diveSessionManager: DiveSessionManager
   /// TODO: make maxSecondDelta editable in GUI
   let maxSecondDelta = 15.0 * 60.0
+  @EnvironmentObject var diveSessionManager: DiveSessionManager
   var body: some View {
     NavigationView {
       VStack {
@@ -38,7 +35,8 @@ struct ContentView: View {
       #endif
         .padding()
         .onAppear {
-          diveSessionManager.readDiveDepths(maxSecondDelta: maxSecondDelta)
+          // FIXME: this does a repeated reload of data
+          diveSessionManager.readDiveSample(maxSecondDelta: maxSecondDelta)
         }
         .navigationBarTitle(appName)
       #if DEBUG

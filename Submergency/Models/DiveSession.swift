@@ -33,10 +33,8 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
   }
 
   /// Initializer of a DiveSession
-  /// - Parameter id: a general identifier
   /// - Parameter sample: the first dive sample
-  internal init(ident _: UInt, sample: DiveSample) {
-    // profile = []
+  internal init(sample: DiveSample) {
     profile.append(sample)
   }
 
@@ -59,14 +57,6 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
     return profile.last!.end.timeIntervalSinceReferenceDate - profile.first!.start.timeIntervalSinceReferenceDate
   }
 
-  /// log a sample via XCG logger
-  func log() {
-    smLogger.debug("dive session \(id) size: \(profile.count):")
-    for sample in profile {
-      sample.log()
-    }
-  }
-
   // MARK: - Protocol Hashable
 
   func hash(into hasher: inout Hasher) {
@@ -79,5 +69,15 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
     return lhs.start == rhs.start
       && lhs.end == rhs.end
       && lhs.profile.count == rhs.profile.count
+  }
+
+  // MARK: - Logging
+
+  /// log a sample via XCG logger
+  func log() {
+    smLogger.debug("dive session \(id) size: \(profile.count):")
+    for sample in profile {
+      sample.log()
+    }
   }
 }

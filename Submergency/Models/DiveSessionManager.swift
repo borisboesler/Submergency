@@ -18,11 +18,41 @@ class DiveSessionManager: ObservableObject {
   /// initializer
   init() {}
 
+  // MARK: - Dive Samples
+
+  /// read dive depth from healthikit
+  /// - Parameter maxSecondDelta: max interval between two sessions
+  func readDiveSample(maxSecondDelta: Double) {
+    smLogger.info("readDiveSample")
+    samples = []
+    sessions = []
+
+    healthStore.requestAuthorization { success in
+      if success {
+        self.healthStore.readDepthType { sample in
+          DispatchQueue.main.async {
+            self.add(sample: sample, maxSecondDelta: maxSecondDelta)
+          }
+        }
+      } else {
+        smLogger.info("healthStore.requestAuthorization failed")
+      }
+    }
+  }
+
   /// add a sample to the manager and add it to the relevnt session or create a new dive session
+  /// - Parameters:
+  ///   - sample: the sample to add
+  ///   - maxSecondDelta: max interval between two sessions
   func add(sample: DiveSample, maxSecondDelta: Double) {
     // add sample
     samples.append(sample)
+    addSampleToSessions(sample: sample, maxSecondDelta: maxSecondDelta)
+  }
 
+  // MARK: - Sessions
+
+  func addSampleToSessions(sample: DiveSample, maxSecondDelta: Double) {
     #if DEBUG
       smLogger.debug("--")
       smLogger.debug("start:\(sample.start) end:\(sample.end) depth: \(sample.depth)")
@@ -43,30 +73,32 @@ class DiveSessionManager: ObservableObject {
       return
     }
     // add a new session and add sample to new session
-    let session = DiveSession(ident: UInt(sessions.count + 1), sample: sample)
+    let session = DiveSession(sample: sample)
     #if DEBUG
       smLogger.debug("add sample to new session \(session.id)")
     #endif
     sessions.append(session)
   }
 
-  func readDiveDepths(maxSecondDelta: Double) {
-    smLogger.info("init")
+  /// delete all sessiona and reload sessions from samples
+  /// - Parameter maxSecondDelta: max interval between two sessions
+  func reloadDiveSessions(maxSecondDelta: Double) {
+    smLogger.info("reloadDiveSessions")
 
-    healthStore.requestAuthorization { success in
-      if success {
-        self.healthStore.readDepthType { query in
-          DispatchQueue.main.async {
-            self.add(sample: query, maxSecondDelta: maxSecondDelta)
-          }
-        }
-      } else {
-        smLogger.info(" ContentView.requestAuthorization failed")
+    // delete all old sessions
+    sessions = []
+
+    // recoonstruct all sessions from samples
+    for sample in samples {
+      DispatchQueue.main.async {
+        self.addSampleToSessions(sample: sample, maxSecondDelta: maxSecondDelta)
       }
     }
   }
 
-  // TODO: rebuild sessions from samples
+  // MARK: - Temperature
+
+  // MARK: - Logging
 
   /// log a sample via XCG logger
   func log() {
