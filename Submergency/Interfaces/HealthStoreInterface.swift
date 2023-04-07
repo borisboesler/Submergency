@@ -17,6 +17,9 @@ class HealthStoreInterface {
   ///  dive depth characteristics to read
   let underwaterDepthType
     = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.underwaterDepth)
+  ///  dive temperature characteristics to read
+  let underwaterTemperatureType
+    = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.waterTemperature)
 
   init() {
     // Check whether HealthKit is available on this device.
@@ -33,7 +36,7 @@ class HealthStoreInterface {
   func requestAuthorization(completion: @escaping (Bool) -> Void) {
     smLogger.info("request authorization ")
 
-    let hkTypesToRead: Set<HKObjectType> = [underwaterDepthType!]
+    let hkTypesToRead: Set<HKObjectType> = [underwaterDepthType!, underwaterTemperatureType!]
 
     guard let healthStore = healthStore else { return completion(false) }
 
@@ -69,6 +72,34 @@ class HealthStoreInterface {
         let diveSample = DiveSample(start: sampleDates.start, end: sampleDates.end,
                                     depth: depth.doubleValue(for: HKUnit.meter()))
         completion(diveSample)
+      } // if let sampleDates = dates
+    } // let query
+
+    // execute query (asyncroniously)
+    healthStore!.execute(query)
+  }
+
+  func readTemperatureType(completion: @escaping (TemperatureSample) -> Void) {
+    // TODO: generators of data: HKSourceQuery
+    // generate query to read depth data
+    let query = HKQuantitySeriesSampleQuery(quantityType: underwaterTemperatureType!,
+                                            predicate: nil) { _, temp, dateInterval, _, _, error in
+      if let error = error {
+        smLogger.debug("\(error)")
+        return
+      }
+      guard let temp = temp
+      else {
+        smLogger.debug("fail on temp")
+        return
+      }
+
+      // bypass nil check
+      if let sampleDates = dateInterval {
+        // create a divesample
+        let tempSample = TemperatureSample(start: sampleDates.start, end: sampleDates.end,
+                                           temp: temp.doubleValue(for: HKUnit.degreeCelsius()))
+        completion(tempSample)
       } // if let sampleDates = dates
     } // let query
 

@@ -11,9 +11,11 @@ class DiveSessionManager: ObservableObject {
   /// the session manager receives its dive from the HealthStore
   private var healthStore = HealthStoreInterface()
   /// all dive samples
-  private var samples: [DiveSample] = []
+  private var diveSamples: [DiveSample] = []
+  /// all temperature samples
+  private var temperatureSamples: [TemperatureSample] = []
   /// all dive sample are organized in dive sessions
-  @Published var sessions: [DiveSession] = []
+  @Published var diveSessions: [DiveSession] = []
 
   /// initializer
   init() {}
@@ -22,16 +24,16 @@ class DiveSessionManager: ObservableObject {
 
   /// read dive depth from healthikit
   /// - Parameter maxSecondDelta: max interval between two sessions
-  func readDiveSample(maxSecondDelta: Double) {
+  func readDiveSamples(maxSecondDelta: Double) {
     smLogger.info("readDiveSample")
-    samples = []
-    sessions = []
+    diveSamples = []
+    diveSessions = []
 
     healthStore.requestAuthorization { success in
       if success {
         self.healthStore.readDepthType { sample in
           DispatchQueue.main.async {
-            self.add(sample: sample, maxSecondDelta: maxSecondDelta)
+            self.addDiveSample(sample: sample, maxSecondDelta: maxSecondDelta)
           }
         }
       } else {
@@ -44,9 +46,9 @@ class DiveSessionManager: ObservableObject {
   /// - Parameters:
   ///   - sample: the sample to add
   ///   - maxSecondDelta: max interval between two sessions
-  func add(sample: DiveSample, maxSecondDelta: Double) {
+  func addDiveSample(sample: DiveSample, maxSecondDelta: Double) {
     // add sample
-    samples.append(sample)
+    diveSamples.append(sample)
     addSampleToSessions(sample: sample, maxSecondDelta: maxSecondDelta)
   }
 
@@ -59,7 +61,7 @@ class DiveSessionManager: ObservableObject {
     #endif
 
     // search a dive session to which this sample belongs to
-    for var session in sessions
+    for var session in diveSessions
       // appending a sample to a session
       where (sample.start.timeIntervalSinceReferenceDate >= session.start.timeIntervalSinceReferenceDate)
       && (sample.start.timeIntervalSinceReferenceDate - maxSecondDelta <= session.end.timeIntervalSinceReferenceDate) {
@@ -77,7 +79,7 @@ class DiveSessionManager: ObservableObject {
     #if DEBUG
       smLogger.debug("add sample to new session \(session.id)")
     #endif
-    sessions.append(session)
+    diveSessions.append(session)
   }
 
   /// delete all sessiona and reload sessions from samples
@@ -86,10 +88,10 @@ class DiveSessionManager: ObservableObject {
     smLogger.info("reloadDiveSessions")
 
     // delete all old sessions
-    sessions = []
+    diveSessions = []
 
     // recoonstruct all sessions from samples
-    for sample in samples {
+    for sample in diveSamples {
       DispatchQueue.main.async {
         self.addSampleToSessions(sample: sample, maxSecondDelta: maxSecondDelta)
       }
@@ -98,11 +100,45 @@ class DiveSessionManager: ObservableObject {
 
   // MARK: - Temperature
 
+  func readDiveTemperatures() {
+    smLogger.info("readDiveTemperatures")
+    temperatureSamples = []
+
+    healthStore.requestAuthorization { success in
+      if success {
+        self.healthStore.readTemperatureType { temperatureSample in
+          DispatchQueue.main.async {
+            // self.add(sample: sample)
+            self.temperatureSamples.append(temperatureSample)
+
+            #if DEBUG
+              smLogger.debug("temperature from: \(temperatureSample.start) to \(temperatureSample.end) \(temperatureSample.temp)C")
+            #endif
+
+            #if false
+              /// this is useless, because the temperature might be delivered BEFORE a dive sample has been delivered
+              /// add temperature sample to dive sample
+              for var diveSample in self.diveSamples
+                // appending a sample to a session
+                where (temperatureSample.start.timeIntervalSinceReferenceDate >= diveSample.start.timeIntervalSinceReferenceDate)
+                && (temperatureSample.start.timeIntervalSinceReferenceDate <= diveSample.end.timeIntervalSinceReferenceDate) {
+                diveSample.temp = temperatureSample
+                return
+              }
+            #endif
+          }
+        }
+      } else {
+        smLogger.info("healthStore.requestAuthorization failed")
+      }
+    }
+  }
+
   // MARK: - Logging
 
   /// log a sample via XCG logger
   func log() {
-    for session in sessions {
+    for session in diveSessions {
       session.log()
     }
   }

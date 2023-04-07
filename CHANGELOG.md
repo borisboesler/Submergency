@@ -11,7 +11,11 @@
 - **git:** Add Git Hook Templates
 - **git:** Initial git Setup
 
+### Code Refactoring
+- General Code Clean-Up
+
 ### Features
+- Read Temperature Samples From HealthKit
 - Add Profile Graph
 - Small GUI With Navigation
 - Read Dive Depth And Display Session List

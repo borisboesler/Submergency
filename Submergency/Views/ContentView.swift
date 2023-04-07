@@ -18,8 +18,8 @@ struct ContentView: View {
   var body: some View {
     NavigationView {
       VStack {
-        if diveSessionManager.sessions.count > 0 {
-          List(diveSessionManager.sessions, id: \.self) { diveSession in
+        if diveSessionManager.diveSessions.count > 0 {
+          List(diveSessionManager.diveSessions, id: \.self) { diveSession in
             NavigationLink(destination: DiveSessionView(diveSession: diveSession)) {
               DiveSessionRowView(diveSession: diveSession)
             }
@@ -36,7 +36,8 @@ struct ContentView: View {
         .padding()
         .onAppear {
           // FIXME: this does a repeated reload of data
-          diveSessionManager.readDiveSample(maxSecondDelta: maxSecondDelta)
+          diveSessionManager.readDiveSamples(maxSecondDelta: maxSecondDelta)
+          diveSessionManager.readDiveTemperatures()
         }
         .navigationBarTitle(appName)
       #if DEBUG
