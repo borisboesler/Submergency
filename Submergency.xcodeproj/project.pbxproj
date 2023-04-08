@@ -18,6 +18,7 @@
 		255DA78729D9A25C00D83DAF /* DiveSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255DA78629D9A25C00D83DAF /* DiveSessionView.swift */; };
 		257B827A29D459A200F106B3 /* DiveSessionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B827929D459A200F106B3 /* DiveSessionRowView.swift */; };
 		257ED79929E007F0001358B6 /* TemperatureSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257ED79829E007F0001358B6 /* TemperatureSample.swift */; };
+		257ED79B29E06C0C001358B6 /* UDDFFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257ED79A29E06C0C001358B6 /* UDDFFile.swift */; };
 		25A7228929D02DF40010CD69 /* DiveSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A7228829D02DF40010CD69 /* DiveSessionManager.swift */; };
 		25A7228B29D036790010CD69 /* DiveSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A7228A29D036790010CD69 /* DiveSample.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 		255DA78629D9A25C00D83DAF /* DiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSessionView.swift; sourceTree = "<group>"; };
 		257B827929D459A200F106B3 /* DiveSessionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSessionRowView.swift; sourceTree = "<group>"; };
 		257ED79829E007F0001358B6 /* TemperatureSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureSample.swift; sourceTree = "<group>"; };
+		257ED79A29E06C0C001358B6 /* UDDFFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDDFFile.swift; sourceTree = "<group>"; };
 		25A7228829D02DF40010CD69 /* DiveSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSessionManager.swift; sourceTree = "<group>"; };
 		25A7228A29D036790010CD69 /* DiveSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +60,7 @@
 				257ED79829E007F0001358B6 /* TemperatureSample.swift */,
 				2558DE0E29CDA03600284FB3 /* DiveSession.swift */,
 				25A7228829D02DF40010CD69 /* DiveSessionManager.swift */,
+				257ED79A29E06C0C001358B6 /* UDDFFile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				2558DE0F29CDA03600284FB3 /* DiveSession.swift in Sources */,
 				257B827A29D459A200F106B3 /* DiveSessionRowView.swift in Sources */,
 				25A7228B29D036790010CD69 /* DiveSample.swift in Sources */,
+				257ED79B29E06C0C001358B6 /* UDDFFile.swift in Sources */,
 				2558DE0C29C9F8C300284FB3 /* HealthStoreInterface.swift in Sources */,
 				255DA78729D9A25C00D83DAF /* DiveSessionView.swift in Sources */,
 				2559BAAE29C733B00087C3A6 /* ContentView.swift in Sources */,

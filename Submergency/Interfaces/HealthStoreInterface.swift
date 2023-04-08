@@ -79,6 +79,17 @@ class HealthStoreInterface {
     healthStore!.execute(query)
   }
 
+  func readSourceType(completion: @escaping (HKSource) -> Void) {
+    // read sources
+    let query = HKSourceQuery(sampleType: underwaterDepthType!,
+                              samplePredicate: nil) { _, sources, _ in
+      for source in sources! {
+        completion(source)
+      }
+    }
+    healthStore!.execute(query)
+  }
+
   func readTemperatureType(completion: @escaping (TemperatureSample) -> Void) {
     // TODO: generators of data: HKSourceQuery
     // generate query to read depth data

@@ -6,14 +6,17 @@
 //
 
 import Foundation
+import HealthKit
 
 class DiveSessionManager: ObservableObject {
   /// the session manager receives its dive from the HealthStore
   private var healthStore = HealthStoreInterface()
+  /// a creator of this type of data
+  var source: HKSource?
   /// all dive samples
   private var diveSamples: [DiveSample] = []
   /// all temperature samples
-  private var temperatureSamples: [TemperatureSample] = []
+  var temperatureSamples: [TemperatureSample] = []
   /// all dive sample are organized in dive sessions
   @Published var diveSessions: [DiveSession] = []
 
@@ -75,7 +78,7 @@ class DiveSessionManager: ObservableObject {
       return
     }
     // add a new session and add sample to new session
-    let session = DiveSession(sample: sample)
+    let session = DiveSession(manager: self, sample: sample)
     #if DEBUG
       smLogger.debug("add sample to new session \(session.id)")
     #endif
@@ -130,6 +133,23 @@ class DiveSessionManager: ObservableObject {
         }
       } else {
         smLogger.info("healthStore.requestAuthorization failed")
+      }
+    }
+  }
+
+  // MARK: - Source
+
+  func readSource() {
+    smLogger.info("readSource")
+
+    healthStore.requestAuthorization { success in
+      if success {
+        self.healthStore.readSourceType { sourceSample in
+          DispatchQueue.main.async {
+            smLogger.info("import from: \(sourceSample.name) to \(sourceSample.bundleIdentifier)")
+            self.source = sourceSample
+          }
+        }
       }
     }
   }
