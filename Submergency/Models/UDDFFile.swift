@@ -68,20 +68,27 @@ class UDDFString {
     return waypointTag
   }
 
-  func getUDDFWaypointTag(startTime: Date, sample: DiveSample, temps _: [TemperatureSample]) -> String
-  {
+  func getUDDFTemeratureTag(sample: DiveSample, temps: [TemperatureSample]) -> String {
+    for temp in temps where temp.start == sample.start {
+      var tempTag = "<temperature>\(temp.temp + 273.15)</temperature>\n"
+      return tempTag
+    }
+    return ""
+  }
+
+  func getUDDFWaypointTag(startTime: Date, sample: DiveSample, temps: [TemperatureSample]) -> String {
     var waypointTag = "<waypoint>\n"
     waypointTag += "<depth>\(sample.depth)</depth>\n"
     waypointTag += "<divetime>\((sample.end.timeIntervalSinceReferenceDate) - startTime.timeIntervalSinceReferenceDate)</divetime>\n"
     // <temperature>\(findTemperature(sample.start, temps)) + 273.15</temperature>
+    waypointTag += getUDDFTemeratureTag(sample: sample, temps: temps)
     waypointTag += "<divemode type=\"apnoe\"/>\n"
     waypointTag += "</waypoint>\n"
     return waypointTag
   }
 
   ///
-  func getUDDFSamplesTag(startTime: Date, profile: [DiveSample], temps: [TemperatureSample]) -> String
-  {
+  func getUDDFSamplesTag(startTime: Date, profile: [DiveSample], temps: [TemperatureSample]) -> String {
     var samplesTag = "<samples>\n"
 
     // have to start at waypoint 0
