@@ -12,6 +12,7 @@
 - **git:** Initial git Setup
 
 ### Code Refactoring
+- Replace Deprecated UI Elements
 - General Code Clean-Up
 
 ### Features

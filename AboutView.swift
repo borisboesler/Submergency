@@ -37,7 +37,6 @@ struct AboutView: View {
       Spacer()
     }
     .padding(5)
-    .navigationBarTitle("About " + appName, displayMode: .inline)
   }
 }
 
