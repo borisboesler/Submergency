@@ -16,7 +16,7 @@ struct ContentView: View {
   let maxSecondDelta = 15.0 * 60.0
   @EnvironmentObject var diveSessionManager: DiveSessionManager
   var body: some View {
-    NavigationView {
+    NavigationStack {
       VStack {
         if diveSessionManager.diveSessions.count > 0 {
           List(diveSessionManager.diveSessions, id: \.self) { diveSession in
@@ -29,7 +29,7 @@ struct ContentView: View {
           Text("No dive data in HealthKit").fontWeight(.bold)
           Spacer()
         }
-      }
+      } // VStack
       #if DEBUG
         .background(Color.red)
       #endif
@@ -39,33 +39,20 @@ struct ContentView: View {
           diveSessionManager.readDiveSamples(maxSecondDelta: maxSecondDelta)
           diveSessionManager.readDiveTemperatures()
         }
-        .navigationBarTitle(appName)
-      #if DEBUG
-        .navigationBarItems(
-          leading:
-          Button(action: {
-            diveSessionManager.log()
-          }, label: { Text("Dump") }),
-          trailing:
-          NavigationLink(destination: AboutView()) {
-            HStack {
-              Image(systemName: "info.circle")
-                .imageScale(.large)
+        .navigationTitle(appName)
+        .toolbar {
+          #if DEBUG
+            ToolbarItem(placement: .navigationBarLeading) {
+              Button(action: { diveSessionManager.log() }, label: { Text("Dump") })
+            }
+          #endif
+          ToolbarItem(placement: .navigationBarTrailing) {
+            NavigationLink(destination: AboutView()) {
+              Image(systemName: "info.circle").imageScale(.large)
             }
           }
-        )
-      #else
-          .navigationBarItems(
-            trailing:
-            NavigationLink(destination: AboutView()) {
-              HStack {
-                Image(systemName: "info.circle")
-                  .imageScale(.large)
-              }
-            }
-          )
-      #endif
-    } // NavigationView
+        } // toolbar
+    } // NavigationStack
   } // var body
 
   // MARK: - methods

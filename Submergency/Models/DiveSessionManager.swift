@@ -158,6 +158,7 @@ class DiveSessionManager: ObservableObject {
 
   /// log a sample via XCG logger
   func log() {
+    smLogger.info("dive session:")
     for session in diveSessions {
       session.log()
     }
