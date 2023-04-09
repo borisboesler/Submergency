@@ -75,7 +75,7 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
   }
 
   func defaultUDDFFilename() -> String {
-    let filename = "SM_UDDF_" + DiveSession.fileDateFormatter.string(from: start)
+    let filename = "SM_" + DiveSession.fileDateFormatter.string(from: start)
     return filename
   }
 
