@@ -7,15 +7,22 @@
 
 import Charts
 import SwiftUI
+import UniformTypeIdentifiers
 
-// MARK: - DiveSessionView
+// MARK: - Local config
 
 let displayTemperatureGraph = true
+
+// MARK: - UDDF file type
+
+let UTTypeUDDF = UTType(filenameExtension: "uddf", conformingTo: UTType.xml)
+let UTTypeExport: UTType = UTTypeUDDF!
 
 // MARK: - DiveSessionView
 
 struct DiveSessionView: View {
   let diveSession: DiveSession
+  @State var isExporting = false
 
   /// local date formatter for this view
   static let dateFormatter: DateFormatter = {
@@ -92,16 +99,33 @@ struct DiveSessionView: View {
         }
         // } // ScrollView
       } // GroupBox
+
+      // export button
+      Button(action: { isExporting = true },
+             label: { Text("Export") })
+        .fileExporter(isPresented: $isExporting,
+                      document: UDDFFile(initialText: diveSession.buildUDDF()),
+                      contentType: UTTypeUDDF!,
+                      defaultFilename: diveSession.defaultUDDFFilename()) { result in
+          switch result {
+          case let .success(url):
+            smLogger.debug("Saved to: \(url)")
+          case let .failure(error):
+            smLogger.debug(error.localizedDescription)
+          }
+        }
     } // VStack
   } // body
 }
 
 // MARK: - DiveSessionView_Previews
 
-struct DiveSessionView_Previews: PreviewProvider {
-  static var previews: some View {
-    DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
-                                                                end: Date.now.addingTimeInterval(10.0),
-                                                                depth: 12.234)))
+#if false
+  struct DiveSessionView_Previews: PreviewProvider {
+    static var previews: some View {
+      DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
+                                                                  end: Date.now.addingTimeInterval(10.0),
+                                                                  depth: 12.234)))
+    }
   }
-}
+#endif

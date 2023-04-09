@@ -35,7 +35,7 @@ struct ContentView: View {
       #endif
         .padding()
         .onAppear {
-          // FIXME: this does a repeated reload of data
+          diveSessionManager.readSource()
           diveSessionManager.readDiveSamples(maxSecondDelta: maxSecondDelta)
           diveSessionManager.readDiveTemperatures()
         }

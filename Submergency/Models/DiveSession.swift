@@ -17,11 +17,9 @@ import Foundation
 class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
   /// General number
   let id = UUID()
-
   /// The dive profile during this dive session. the surface samples are missing and
   /// must be added manually during all kinds of dumps
   var profile: [DiveSample] = []
-
   /// computed properties: start of first sample; empty profile not allowed
   var start: Date {
     profile.first!.start
@@ -32,9 +30,23 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
     profile.last!.end
   }
 
+  /// dive session as string
+  var uddfString = UDDFString()
+  /// format of UDDF filename
+  static let fileDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.locale = Locale.autoupdatingCurrent
+    formatter.dateFormat = "yyyyMMdd-hhmmssa"
+    return formatter
+  }()
+
+  /// parent session
+  let parentManager: DiveSessionManager
+
   /// Initializer of a DiveSession
   /// - Parameter sample: the first dive sample
-  internal init(sample: DiveSample) {
+  internal init(manager: DiveSessionManager, sample: DiveSample) {
+    parentManager = manager
     profile.append(sample)
   }
 
@@ -55,6 +67,20 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
 
   func duration() -> TimeInterval {
     return profile.last!.end.timeIntervalSinceReferenceDate - profile.first!.start.timeIntervalSinceReferenceDate
+  }
+
+  // MARK: Build UDDF string
+
+  func buildUDDF() -> String {
+    return uddfString.getUDDFString(computerId: parentManager.source?.bundleIdentifier ?? "unknown id",
+                                    computerName: parentManager.source?.name ?? "no name",
+                                    session: self,
+                                    temps: parentManager.temperatureSamples)
+  }
+
+  func defaultUDDFFilename() -> String {
+    let filename = "SM_UDDF_" + DiveSession.fileDateFormatter.string(from: start)
+    return filename
   }
 
   // MARK: - Protocol Hashable
