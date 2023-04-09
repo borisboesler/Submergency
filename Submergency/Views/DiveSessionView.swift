@@ -43,78 +43,79 @@ struct DiveSessionView: View {
   }()
 
   var body: some View {
-    VStack {
-      HStack {
-        // basic info
-        Text("\(DiveSessionView.dateFormatter.string(from: diveSession.start))")
-        // TODO: should we skip the hours?
-        Text("\(DiveSessionView.durationFormatter.string(from: diveSession.duration()) ?? "0")")
-        Text(String(format: "%.1fm", diveSession.maxDepth()))
-      }
+    NavigationStack {
+      VStack {
+        HStack {
+          // basic info
+          // TODO: should we skip the hours in duration?
+          Text("\(DiveSessionView.durationFormatter.string(from: diveSession.duration()) ?? "0")")
+          Text("    ") // TODO: proper layouting
+          Text(String(format: "%.1fm", diveSession.maxDepth()))
+        }
 
-      // a dive profile
-      Divider()
+        // a dive profile
+        Divider()
 
-      GroupBox("Dive Session Profile") {
-        // ScrollView(.vertical, showsIndicators: true) {
-        Chart {
-          // depth
-          ForEach(diveSession.profile) { sample in
-            // TODO: fill gaps with time at depth 0m
-            LineMark(
-              x: .value("Time", sample.start),
-              y: .value("Depth", -sample.depth)
-            )
-            .foregroundStyle(by: .value("Value", "Depth"))
-            .interpolationMethod(.stepStart)
-          }
-          #if false
-            // temperature
+        GroupBox("Dive Session Profile") {
+          // ScrollView(.vertical, showsIndicators: true) {
+          Chart {
+            // depth
             ForEach(diveSession.profile) { sample in
+              // TODO: fill gaps with time at depth 0m
               LineMark(
                 x: .value("Time", sample.start),
-                y: .value("Temperature", sample.temp?.temp ?? 0.0)
+                y: .value("Depth", -sample.depth)
               )
-              .foregroundStyle(by: .value("Value", "Temperature"))
+              .foregroundStyle(by: .value("Value", "Depth"))
               .interpolationMethod(.stepStart)
             }
-          #endif
-        } // Chart
-        // .frame(width: diveSession.duration())
-        // move depth axis to the left
-        .chartYAxis {
-          AxisMarks(position: .leading)
-          #if false
-            // should be from:35 to:0, but then axis is moved to .leading
-            AxisMarks(position: .trailing
-              // , values: Array(stride(from: 0, through: 35, by: 5))
-            )
-          #endif
-        }
-
-        // background
-        .chartPlotStyle { plotArea in
-          plotArea
-            .background(.blue.opacity(0.1))
-        }
-        // } // ScrollView
-      } // GroupBox
-
-      // export button
-      Button(action: { isExporting = true },
-             label: { Text("Export") })
-        .fileExporter(isPresented: $isExporting,
-                      document: UDDFFile(initialText: diveSession.buildUDDF()),
-                      contentType: UTTypeUDDF!,
-                      defaultFilename: diveSession.defaultUDDFFilename()) { result in
-          switch result {
-          case let .success(url):
-            smLogger.debug("Saved to: \(url)")
-          case let .failure(error):
-            smLogger.debug(error.localizedDescription)
+            #if false
+              // temperature
+              ForEach(diveSession.profile) { sample in
+                LineMark(
+                  x: .value("Time", sample.start),
+                  y: .value("Temperature", sample.temp?.temp ?? 0.0)
+                )
+                .foregroundStyle(by: .value("Value", "Temperature"))
+                .interpolationMethod(.stepStart)
+              }
+            #endif
+          } // Chart
+          // move depth axis to the left
+          .chartYAxis {
+            AxisMarks(position: .leading)
+            #if false
+              AxisMarks(position: .trailing)
+            #endif
           }
-        }
-    } // VStack
+
+          // background
+          .chartPlotStyle { plotArea in plotArea
+            .background(.blue.opacity(0.1))
+          }
+          // } // ScrollView
+        } // GroupBox
+      } // VStack
+      .navigationTitle("\(DiveSessionView.dateFormatter.string(from: diveSession.start))")
+      .toolbar {
+        ToolbarItem(placement: .navigationBarTrailing) {
+          Button(action: { isExporting = true },
+                 label: // { Text("Export") }
+                 { Image(systemName: "square.and.arrow.up").imageScale(.large) })
+            .fileExporter(isPresented: $isExporting,
+                          document: UDDFFile(initialText: diveSession.buildUDDF()),
+                          contentType: UTTypeUDDF!,
+                          defaultFilename: diveSession.defaultUDDFFilename()) { result in
+              switch result {
+              case let .success(url):
+                smLogger.debug("Saved to: \(url)")
+              case let .failure(error):
+                smLogger.debug(error.localizedDescription)
+              }
+            }
+        } // ToolbarItem
+      } // toolbar
+    } // NavigationStack
   } // body
 }
 
