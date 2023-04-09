@@ -17,6 +17,7 @@
 - General Code Clean-Up
 
 ### Features
+- Display Temperature In Graph
 - Export Temperature In UDDF
 - Export An UDDF FIle
 - Read Temperature Samples From HealthKit

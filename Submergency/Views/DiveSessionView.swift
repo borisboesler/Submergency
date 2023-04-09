@@ -43,6 +43,8 @@ struct DiveSessionView: View {
   }()
 
   var body: some View {
+    let maxTemperatureCelcius = 30.0
+
     NavigationStack {
       VStack {
         HStack {
@@ -69,12 +71,16 @@ struct DiveSessionView: View {
               .foregroundStyle(by: .value("Value", "Depth"))
               .interpolationMethod(.stepStart)
             }
-            #if false
-              // temperature
+            #if true
+              // temperature, depth ranges from [0, diveSession.maxDepth()]
+              // set displayed temperature to -maxDepth + (temp * (diveSession.maxDepth() / maxTemp))
               ForEach(diveSession.profile) { sample in
                 LineMark(
                   x: .value("Time", sample.start),
-                  y: .value("Temperature", sample.temp?.temp ?? 0.0)
+                  y: .value("Temperature",
+                            -diveSession.maxDepth()
+                              + (diveSessionManager.temperature(start: sample.start)
+                                * (diveSession.maxDepth() / maxTemperatureCelcius)))
                 )
                 .foregroundStyle(by: .value("Value", "Temperature"))
                 .interpolationMethod(.stepStart)
@@ -85,7 +91,9 @@ struct DiveSessionView: View {
           .chartYAxis {
             AxisMarks(position: .leading)
             #if false
-              AxisMarks(position: .trailing)
+              // this axis is on top (>0) of the other graph
+              AxisMarks(position: .trailing,
+                        values: Array(stride(from: maxTemperatureCelcius, through: 0.0, by: -5.0)))
             #endif
           }
 

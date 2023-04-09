@@ -137,6 +137,13 @@ class DiveSessionManager: ObservableObject {
     }
   }
 
+  func temperature(start: Date) -> Double {
+    for tempSample in temperatureSamples where tempSample.start == start {
+      return tempSample.temp
+    }
+    return 0.0
+  }
+
   // MARK: - Source
 
   func readSource() {
