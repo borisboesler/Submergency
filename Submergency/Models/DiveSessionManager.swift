@@ -78,7 +78,7 @@ class DiveSessionManager: ObservableObject {
       return
     }
     // add a new session and add sample to new session
-    let session = DiveSession(manager: self, sample: sample)
+    let session = DiveSession(sample: sample)
     #if DEBUG
       smLogger.debug("add sample to new session \(session.id)")
     #endif

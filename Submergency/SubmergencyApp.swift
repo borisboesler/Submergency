@@ -16,13 +16,16 @@ let appName = "Submergency"
 /// Global logger
 let smLogger = XCGLogger(identifier: appName)
 
+/// Global Dive Session Manager
+let diveSessionManager = DiveSessionManager()
+
 // MARK: - SubmergencyApp
 
 @main
 struct SubmergencyApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView().environmentObject(DiveSessionManager())
+      ContentView().environmentObject(diveSessionManager)
     }
   }
 }

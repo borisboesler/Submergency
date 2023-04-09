@@ -42,12 +42,10 @@ struct DiveSessionRowView: View {
 
 // MARK: - DiveRowView_Previews
 
-#if false
-  struct DiveRowView_Previews: PreviewProvider {
-    static var previews: some View {
-      DiveSessionRowView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
-                                                                     end: Date.now.addingTimeInterval(100.0 * 60.0),
-                                                                     depth: 100.234)))
-    }
+struct DiveRowView_Previews: PreviewProvider {
+  static var previews: some View {
+    DiveSessionRowView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
+                                                                   end: Date.now.addingTimeInterval(100.0 * 60.0),
+                                                                   depth: 100.234)))
   }
-#endif
+}

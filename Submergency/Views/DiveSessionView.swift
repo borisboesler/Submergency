@@ -120,12 +120,10 @@ struct DiveSessionView: View {
 
 // MARK: - DiveSessionView_Previews
 
-#if false
-  struct DiveSessionView_Previews: PreviewProvider {
-    static var previews: some View {
-      DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
-                                                                  end: Date.now.addingTimeInterval(10.0),
-                                                                  depth: 12.234)))
-    }
+struct DiveSessionView_Previews: PreviewProvider {
+  static var previews: some View {
+    DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
+                                                                end: Date.now.addingTimeInterval(10.0),
+                                                                depth: 12.234)))
   }
-#endif
+}

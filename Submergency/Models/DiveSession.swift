@@ -40,13 +40,9 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
     return formatter
   }()
 
-  /// parent session
-  let parentManager: DiveSessionManager
-
   /// Initializer of a DiveSession
   /// - Parameter sample: the first dive sample
-  internal init(manager: DiveSessionManager, sample: DiveSample) {
-    parentManager = manager
+  internal init(sample: DiveSample) {
     profile.append(sample)
   }
 
@@ -72,10 +68,10 @@ class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
   // MARK: Build UDDF string
 
   func buildUDDF() -> String {
-    return uddfString.getUDDFString(computerId: parentManager.source?.bundleIdentifier ?? "unknown id",
-                                    computerName: parentManager.source?.name ?? "no name",
+    return uddfString.getUDDFString(computerId: diveSessionManager.source?.bundleIdentifier ?? "unknown id",
+                                    computerName: diveSessionManager.source?.name ?? "no name",
                                     session: self,
-                                    temps: parentManager.temperatureSamples)
+                                    temps: diveSessionManager.temperatureSamples)
   }
 
   func defaultUDDFFilename() -> String {
