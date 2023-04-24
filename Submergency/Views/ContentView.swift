@@ -19,7 +19,7 @@ struct ContentView: View {
     NavigationStack {
       VStack {
         if diveSessionManager.diveSessions.count > 0 {
-          List(diveSessionManager.diveSessions, id: \.self) { diveSession in
+          List(diveSessionManager.diveSessions.sorted(by: { $0.start > $1.start }), id: \.self) { diveSession in
             NavigationLink(destination: DiveSessionView(diveSession: diveSession)) {
               DiveSessionRowView(diveSession: diveSession)
             }
@@ -55,7 +55,7 @@ struct ContentView: View {
     } // NavigationStack
   } // var body
 
-  // MARK: - methods
+  // MARK: - Methods
 }
 
 // MARK: - ContentView_Previews
