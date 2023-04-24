@@ -9,6 +9,7 @@ import SwiftUI
 
 private let bundleVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "no build"
 private let bundleShortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "no version"
+private let bundleGitStatus = Bundle.main.infoDictionary?["BundleGitStatus"] as? String ?? "no git status"
 
 // MARK: - AboutView
 
@@ -29,6 +30,7 @@ struct AboutView: View {
         VStack {
           Text("DEBUG Build")
           Text("Bundle version: \(bundleVersion)")
+          Text("git Status: \(bundleGitStatus)")
         }
         .padding(5)
         .background(Color.red)
