@@ -12,9 +12,11 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
-  /// TODO: make maxSecondDelta editable in GUI
-  let maxSecondDelta = 15.0 * 60.0
+  /// dive session break in minutes
+  @State private var diveSessionBreakMinutes: Double = defaultDiveSessionBreak
+  /// the dive session manager
   @EnvironmentObject var diveSessionManager: DiveSessionManager
+
   var body: some View {
     NavigationStack {
       VStack {
@@ -36,7 +38,7 @@ struct ContentView: View {
         .padding()
         .onAppear {
           diveSessionManager.readSource()
-          diveSessionManager.readDiveSamples(maxSecondDelta: maxSecondDelta)
+          diveSessionManager.readDiveSamples(maxSecondDelta: diveSessionBreakMinutes * 60.0)
           diveSessionManager.readDiveTemperatures()
         }
         .navigationTitle(appName)
@@ -46,6 +48,11 @@ struct ContentView: View {
               Button(action: { diveSessionManager.log() }, label: { Text("Dump") })
             }
           #endif
+          ToolbarItem(placement: .navigationBarTrailing) {
+            NavigationLink(destination: ConfigView(diveSessionBreakMinutes: $diveSessionBreakMinutes)) {
+              Image(systemName: "gearshape").imageScale(.large)
+            }
+          }
           ToolbarItem(placement: .navigationBarTrailing) {
             NavigationLink(destination: AboutView()) {
               Image(systemName: "info.circle").imageScale(.large)

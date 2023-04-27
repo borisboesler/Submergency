@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2545441629FAA79D007E9653 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2545441529FAA79D007E9653 /* ConfigView.swift */; };
 		2558DE0329C7895100284FB3 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 2558DE0229C7895100284FB3 /* XCGLogger */; };
 		2558DE0C29C9F8C300284FB3 /* HealthStoreInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2558DE0B29C9F8C300284FB3 /* HealthStoreInterface.swift */; };
 		2558DE0F29CDA03600284FB3 /* DiveSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2558DE0E29CDA03600284FB3 /* DiveSession.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2545441529FAA79D007E9653 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		2558DE0929C9F6E400284FB3 /* Submergency.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Submergency.entitlements; sourceTree = "<group>"; };
 		2558DE0B29C9F8C300284FB3 /* HealthStoreInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStoreInterface.swift; sourceTree = "<group>"; };
 		2558DE0E29CDA03600284FB3 /* DiveSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSession.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			children = (
 				255DA78429D975FD00D83DAF /* AboutView.swift */,
 				2559BAAD29C733B00087C3A6 /* ContentView.swift */,
+				2545441529FAA79D007E9653 /* ConfigView.swift */,
 				257B827929D459A200F106B3 /* DiveSessionRowView.swift */,
 				255DA78629D9A25C00D83DAF /* DiveSessionView.swift */,
 			);
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2545441629FAA79D007E9653 /* ConfigView.swift in Sources */,
 				255DA78529D975FD00D83DAF /* AboutView.swift in Sources */,
 				2558DE0F29CDA03600284FB3 /* DiveSession.swift in Sources */,
 				257B827A29D459A200F106B3 /* DiveSessionRowView.swift in Sources */,

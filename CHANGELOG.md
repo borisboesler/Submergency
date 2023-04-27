@@ -17,6 +17,7 @@
 - General Code Clean-Up
 
 ### Features
+- Configure Length Of Dive Session Break
 - Display Temperature In Graph
 - Export Temperature In UDDF
 - Export An UDDF FIle
