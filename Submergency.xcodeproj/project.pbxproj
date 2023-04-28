@@ -41,6 +41,7 @@
 		257ED79A29E06C0C001358B6 /* UDDFFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDDFFile.swift; sourceTree = "<group>"; };
 		25A7228829D02DF40010CD69 /* DiveSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSessionManager.swift; sourceTree = "<group>"; };
 		25A7228A29D036790010CD69 /* DiveSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiveSample.swift; sourceTree = "<group>"; };
+		25ECF8D429EEE3CF0082F882 /* InfoVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = InfoVersion.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +107,7 @@
 		2559BAAA29C733B00087C3A6 /* Submergency */ = {
 			isa = PBXGroup;
 			children = (
+				25ECF8D429EEE3CF0082F882 /* InfoVersion.plist */,
 				2558DE0929C9F6E400284FB3 /* Submergency.entitlements */,
 				2559BAAB29C733B00087C3A6 /* SubmergencyApp.swift */,
 				2558DE0D29C9FC1D00284FB3 /* Views */,
@@ -132,7 +134,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2559BAB629C733B10087C3A6 /* Build configuration list for PBXNativeTarget "Submergency" */;
 			buildPhases = (
-				2559BABA29C735A70087C3A6 /* Run Script - Write Info.plist */,
+				2559BABA29C735A70087C3A6 /* Run Script - Write InfoVersion.plist */,
 				2559BAA429C733B00087C3A6 /* Sources */,
 				2559BAA529C733B00087C3A6 /* Frameworks */,
 				2559BAA629C733B00087C3A6 /* Resources */,
@@ -218,7 +220,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https: //github.com/realm/SwiftLint\"\nfi\n";
 		};
-		2559BABA29C735A70087C3A6 /* Run Script - Write Info.plist */ = {
+		2559BABA29C735A70087C3A6 /* Run Script - Write InfoVersion.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -228,14 +230,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Run Script - Write Info.plist";
+			name = "Run Script - Write InfoVersion.plist";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n# for debugging/inspection purposses:\n# for line in $(printenv); do echo $line; done\n\nset -x\n\n# for a RELEASE our current HEAD has a tag. we use this tag as version,\n# assuming that the tag format is release/x.y.z[bla]. during development\n# this number is quite a mess. after building the version is correct\nrelease=$(basename $(git describe --tags --always))\n\n# to be conform with some apple requirements (see above bundle version) we use release + hash\n# build=$release-$(git log --oneline HEAD^1.. | awk '{print $1 }')\n# or\n# build=$(git describe --tags --always --dirty)\n# build=`git log -n1 --date=short --format=\"%ad (%h)\"`\nbuild=$(git describe --dirty)\n\n# the plist file to be modified\nplist_path=$INFOPLIST_FILE\n\n# the build configuration (Debug|Release)\n#echo $CONFIGURATION\n\n# PlistBuddy executable\nPLISTBUDDY=/usr/libexec/PlistBuddy\n\n#\n# set the \"short version\" to $build\n#\n\n# add :CFBundleShortVersionString if it does not exits\n$PLISTBUDDY -c \"Print :CFBundleShortVersionString\" \"$plist_path\" >> /dev/null 2>> /dev/null\n# Plistbuddy returns 0 on success\nhasnot_CFBundleShortVersionString=$?\nif [ $hasnot_CFBundleShortVersionString -ne 0 ]; then\n  $PLISTBUDDY -c \"Add :CFBundleShortVersionString string\" \"$plist_path\"\nfi\n# set :CFBundleShortVersionString\n$PLISTBUDDY -c \"Set :CFBundleShortVersionString $release\" \"$plist_path\"\n\n#\n# if this is a RELEASE build then set CFBundleVersion to $release, else to build\n#\n\n# add :CFBundleVersion if it does not exits\n$PLISTBUDDY -c \"Print :CFBundleVersion\" \"$plist_path\" >> /dev/null 2>> /dev/null\n# Plistbuddy returns 0 on success\nhasnot_CFBundleVersion=$?\nif [ $hasnot_CFBundleVersion -ne 0 ]; then\n  $PLISTBUDDY -c \"Add :CFBundleVersion string\" \"$plist_path\"\nfi\n# set :CFBundleVersion\ncase $CONFIGURATION in\n  Release)  $PLISTBUDDY -c \"Set :CFBundleVersion $release\" \"$plist_path\";;\n  *)        $PLISTBUDDY -c \"Set :CFBundleVersion $build\" \"$plist_path\";;\nesac\n\n# end-of-file\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n# for debugging/inspection purposses:\n# for line in $(printenv); do echo $line; done\n\nset -x\n\n# for a RELEASE our current HEAD has a tag. we use this tag as version,\n# assuming that the tag format is release/x.y.z[bla]. during development\n# this number is quite a mess. after building the version is correct\nrelease=$(basename $(git describe --tags --always))\n\n# to be conform with some apple requirements (see above bundle version) we use release + hash\n# build=$release-$(git log --oneline HEAD^1.. | awk '{print $1 }')\n# or\n# build=$(git describe --tags --always --dirty)\n# build=`git log -n1 --date=short --format=\"%ad (%h)\"`\nbuild=$(git describe --dirty)\n\n# the plist file to be modified\nplist_path=$INFOPLIST_FILE\n\n# the build configuration (Debug|Release)\n#echo $CONFIGURATION\n\n# PlistBuddy executable\nPLISTBUDDY=/usr/libexec/PlistBuddy\n\n## function to set entry in plist file\n# synopsis: setPListEntry <plist file> <plist entry name (string)> <plist entry type (string)> <plist entry> <value>\nfunction setPListEntry()\n{\n  # write the git status into plist file\n  local PListFile=$1\n  local PListEntryName=$2\n  local PListEntryType=$3\n  local PListEntryValue=$4\n  \n  # check entry; Plistbuddy returns 0 on success\n  $PLISTBUDDY -c \"Print :$PListEntryName\" \"$PListFile\" >> /dev/null 2>> /dev/null\n  # add entry if not present\n  hasnot_PListEntry=$?\n  if [ $hasnot_PListEntry -ne 0 ]; then\n    $PLISTBUDDY -c \"Add :$PListEntryName $PListEntryType\" \"$PListFile\"\n  fi\n  # set entry\n  $PLISTBUDDY -c \"Set :$PListEntryName $PListEntryValue\" \"$PListFile\"\n}\n\n#\n# set the \"short version\" to $build\n#\nsetPListEntry $plist_path \"CFBundleShortVersionString\" \"string\" $release\n\n#\n# if this is a RELEASE build then set CFBundleVersion to $release, else to build\n#\ncase $CONFIGURATION in\n  Release)  setPListEntry $plist_path \"CFBundleVersion\" \"string\" $release;;\n  *)        setPListEntry $plist_path \"CFBundleVersion\" \"string\" $build;;\nesac\n\n#\n# write the git status into plist file\n#\nsetPListEntry $plist_path \"BundleGitStatus\" \"string\" $build\n\n# end-of-file\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -388,7 +390,7 @@
 				DEVELOPMENT_TEAM = Y9CRDMAX8T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Submergency/Info.plist;
+				INFOPLIST_FILE = Submergency/InfoVersion.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit depth data is read to build a dive profile to export";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We do not write depth data to HealthKit";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -400,7 +402,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.borisboesler.Submergency;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -421,7 +423,7 @@
 				DEVELOPMENT_TEAM = Y9CRDMAX8T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Submergency/Info.plist;
+				INFOPLIST_FILE = Submergency/InfoVersion.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit depth data is read to build a dive profile to export";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We do not write depth data to HealthKit";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -433,7 +435,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.borisboesler.Submergency;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
