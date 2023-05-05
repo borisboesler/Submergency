@@ -127,12 +127,37 @@ struct DiveSessionView: View {
   } // body
 }
 
+// MARK: - DiveSessionView_Previews Support
+
+func getPreviewDivesession() -> DiveSession {
+  let dateNow = Date.now
+  let intervalLength = 2.0 // seconds
+  let intervalDifference = 1.0 // seconds
+  let intervalCount = 10
+
+  let depthStart = 2.0 // meter
+  let depthDescend = 1.0 // descend in meter per sample
+
+  let previewDS = DiveSession(sample: DiveSample(start: dateNow,
+                                                 end: dateNow.addingTimeInterval(intervalLength),
+                                                 depth: depthStart))
+
+  // swiftlint:disable:next identifier_name
+  for i in 1 ... intervalCount {
+    let sampleStart = dateNow.addingTimeInterval(Double(i) * (intervalLength + intervalDifference))
+    let sampleEnd = sampleStart + intervalLength
+    previewDS.add(sample: DiveSample(start: sampleStart,
+                                     end: sampleEnd,
+                                     depth: depthStart * Double(i) * depthDescend))
+  }
+
+  return previewDS
+}
+
 // MARK: - DiveSessionView_Previews
 
 struct DiveSessionView_Previews: PreviewProvider {
   static var previews: some View {
-    DiveSessionView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
-                                                                end: Date.now.addingTimeInterval(10.0),
-                                                                depth: 12.234)))
+    DiveSessionView(diveSession: getPreviewDivesession())
   }
 }
