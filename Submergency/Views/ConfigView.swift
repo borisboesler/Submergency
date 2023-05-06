@@ -22,6 +22,7 @@ struct ConfigView: View {
   /// session break from ContentView
   @Binding var diveSessionBreakMinutes: Double
 
+  /// TODO: make this nicer
   var body: some View {
     VStack {
       Text("Dive Session Break: \(diveSessionBreakMinutes, specifier: "%2.1f")min")
@@ -36,15 +37,13 @@ struct ConfigView: View {
   }
 }
 
-#if false
+// MARK: - ConfigView_Previews
 
-  // MARK: - ConfigView_Previews
+struct ConfigView_Previews: PreviewProvider {
+  @State private static var diveSessionBreakMinutes = 15.0
 
-  struct ConfigView_Previews: PreviewProvider {
-    @State private var diveSessionBreakMinutes = 15.0
-
-    static var previews: some View {
-      ConfigView(diveSessionBreakMinutes: $diveSessionBreakMinutes)
-    }
+  static var previews: some View {
+    ConfigView(diveSessionBreakMinutes: $diveSessionBreakMinutes)
+      .background(Color.gray)
   }
-#endif
+}

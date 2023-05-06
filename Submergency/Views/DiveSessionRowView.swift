@@ -34,9 +34,6 @@ struct DiveSessionRowView: View {
       Text(String(format: "%.1fm", diveSession.maxDepth()))
         .frame(width: 60, alignment: .trailing)
     }
-    #if DEBUG
-      .background(Color.yellow)
-    #endif
   }
 }
 
@@ -47,5 +44,6 @@ struct DiveRowView_Previews: PreviewProvider {
     DiveSessionRowView(diveSession: DiveSession(sample: DiveSample(start: Date.now,
                                                                    end: Date.now.addingTimeInterval(100.0 * 60.0),
                                                                    depth: 100.234)))
+      .background(Color.gray)
   }
 }

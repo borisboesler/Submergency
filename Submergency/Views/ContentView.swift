@@ -26,39 +26,39 @@ struct ContentView: View {
               DiveSessionRowView(diveSession: diveSession)
             }
           }
+          // NOTE: as long as this is a simple list, we keep the style simple
+          .listStyle(.plain)
         } else {
           Spacer()
           Text("No dive data in HealthKit").fontWeight(.bold)
           Spacer()
         }
       } // VStack
-      #if DEBUG
-        .background(Color.red)
-      #endif
-        .padding()
-        .onAppear {
-          diveSessionManager.readSource()
-          diveSessionManager.readDiveSamples(maxSecondDelta: diveSessionBreakMinutes * 60.0)
-          diveSessionManager.readDiveTemperatures()
+
+      .padding()
+      .onAppear {
+        diveSessionManager.readSource()
+        diveSessionManager.readDiveSamples(maxSecondDelta: diveSessionBreakMinutes * 60.0)
+        diveSessionManager.readDiveTemperatures()
+      }
+      .navigationTitle(appName)
+      .toolbar {
+        #if DEBUG
+          ToolbarItem(placement: .navigationBarLeading) {
+            Button(action: { diveSessionManager.log() }, label: { Text("Dump") })
+          }
+        #endif
+        ToolbarItem(placement: .navigationBarTrailing) {
+          NavigationLink(destination: ConfigView(diveSessionBreakMinutes: $diveSessionBreakMinutes)) {
+            Image(systemName: "gearshape").imageScale(.large)
+          }
         }
-        .navigationTitle(appName)
-        .toolbar {
-          #if DEBUG
-            ToolbarItem(placement: .navigationBarLeading) {
-              Button(action: { diveSessionManager.log() }, label: { Text("Dump") })
-            }
-          #endif
-          ToolbarItem(placement: .navigationBarTrailing) {
-            NavigationLink(destination: ConfigView(diveSessionBreakMinutes: $diveSessionBreakMinutes)) {
-              Image(systemName: "gearshape").imageScale(.large)
-            }
+        ToolbarItem(placement: .navigationBarTrailing) {
+          NavigationLink(destination: AboutView()) {
+            Image(systemName: "info.circle").imageScale(.large)
           }
-          ToolbarItem(placement: .navigationBarTrailing) {
-            NavigationLink(destination: AboutView()) {
-              Image(systemName: "info.circle").imageScale(.large)
-            }
-          }
-        } // toolbar
+        }
+      } // toolbar
     } // NavigationStack
   } // var body
 
@@ -70,5 +70,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView().environmentObject(DiveSessionManager())
+      .background(Color.gray)
   }
 }

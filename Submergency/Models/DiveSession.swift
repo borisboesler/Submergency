@@ -10,11 +10,9 @@ import Foundation
 // MARK: - DiveSession
 
 /// A DiveSession represents
-/// ObservableObject for ..
-/// Hashable for ..
-/// Equatable for ..
-/// Identifiable for plotting
-class DiveSession: ObservableObject, Hashable, Equatable, Identifiable {
+/// Hashable for .. List
+/// Identifiable for .. Chart
+class DiveSession: Hashable, Identifiable {
   /// General number
   let id = UUID()
   /// The dive profile during this dive session. the surface samples are missing and

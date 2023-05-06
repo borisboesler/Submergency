@@ -49,10 +49,11 @@ struct DiveSessionView: View {
       VStack {
         HStack {
           // basic info
-          // TODO: should we skip the hours in duration?
+          Spacer()
           Text("\(DiveSessionView.durationFormatter.string(from: diveSession.duration()) ?? "0")")
-          Text("    ") // TODO: proper layouting
+          Spacer()
           Text(String(format: "%.1fm", diveSession.maxDepth()))
+          Spacer()
         }
 
         // a dive profile
@@ -159,5 +160,6 @@ func getPreviewDivesession() -> DiveSession {
 struct DiveSessionView_Previews: PreviewProvider {
   static var previews: some View {
     DiveSessionView(diveSession: getPreviewDivesession())
+      .background(Color.gray)
   }
 }

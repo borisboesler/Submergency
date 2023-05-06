@@ -11,11 +11,7 @@ import SwiftUI
 // MARK: - UDDFString
 
 class UDDFString {
-  // var uddfString: String
-
-  init() {
-    // uddfString = ""
-  }
+  init() {}
 
   /// Build the <generator> section of UDDF
   func uddfGeneratorTag() -> String {
@@ -70,7 +66,7 @@ class UDDFString {
 
   func getUDDFTemeratureTag(sample: DiveSample, temps: [TemperatureSample]) -> String {
     for temp in temps where temp.start == sample.start {
-      var tempTag = "<temperature>\(temp.temp + 273.15)</temperature>\n"
+      let tempTag = "<temperature>\(temp.temp + 273.15)</temperature>\n"
       return tempTag
     }
     return ""

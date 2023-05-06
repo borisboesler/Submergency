@@ -33,7 +33,7 @@ struct AboutView: View {
             Text("DEBUG Build")
             Text("Bundle version: \(bundleVersion)")
           }
-          .padding(5)
+          .padding(10)
           .background(Color.red)
           .cornerRadius(10)
         }
@@ -49,7 +49,6 @@ struct AboutView: View {
         .cornerRadius(10)
       }
     }
-    .padding(5)
   }
 }
 
