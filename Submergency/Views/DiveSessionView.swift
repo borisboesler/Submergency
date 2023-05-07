@@ -12,6 +12,7 @@ import UniformTypeIdentifiers
 // MARK: - Local config
 
 let displayTemperatureGraph = true
+var lastDate = Date(timeIntervalSince1970: 0.0)
 
 // MARK: - UDDF file type
 
@@ -60,33 +61,49 @@ struct DiveSessionView: View {
         Divider()
 
         GroupBox("Dive Session Profile") {
-          // ScrollView(.vertical, showsIndicators: true) {
+          // ScrollView(.horizontal, showsIndicators: true) {
           Chart {
-            // depth
             ForEach(diveSession.profile) { sample in
               // TODO: fill gaps with time at depth 0m
+              #if false
+                // FIXME: this is false
+                if isIntervalGreater(date: sample.start, interval: 3.0) {
+                  LineMark(
+                    x: .value("Time", lastDate),
+                    y: .value("Depth", 0.0)
+                  )
+                  .foregroundStyle(by: .value("Value", "Depth"))
+                  LineMark(
+                    x: .value("Time", sample.start),
+                    y: .value("Depth", 0.0)
+                  )
+                  .foregroundStyle(by: .value("Value", "Depth"))
+                }
+              #endif
+              // horizontal line from start to end for depth
               LineMark(
                 x: .value("Time", sample.start),
                 y: .value("Depth", -sample.depth)
               )
               .foregroundStyle(by: .value("Value", "Depth"))
-              .interpolationMethod(.stepStart)
+              LineMark(
+                x: .value("Time", sample.end),
+                y: .value("Depth", -sample.depth)
+              )
+              .foregroundStyle(by: .value("Value", "Depth"))
             }
-            #if true
-              // temperature, depth ranges from [0, diveSession.maxDepth()]
-              // set displayed temperature to -maxDepth + (temp * (diveSession.maxDepth() / maxTemp))
-              ForEach(diveSession.profile) { sample in
-                LineMark(
-                  x: .value("Time", sample.start),
-                  y: .value("Temperature",
-                            -diveSession.maxDepth()
-                              + (diveSessionManager.temperature(start: sample.start)
-                                * (diveSession.maxDepth() / maxTemperatureCelcius)))
-                )
-                .foregroundStyle(by: .value("Value", "Temperature"))
-                .interpolationMethod(.stepStart)
-              }
-            #endif
+            // temperature, depth ranges from [0, diveSession.maxDepth()]
+            // set displayed temperature to -maxDepth + (temp * (diveSession.maxDepth() / maxTemp))
+            ForEach(diveSession.profile) { sample in
+              LineMark(
+                x: .value("Time", sample.start),
+                y: .value("Temperature",
+                          -diveSession.maxDepth()
+                            + (diveSessionManager.temperature(start: sample.start)
+                              * (diveSession.maxDepth() / maxTemperatureCelcius)))
+              )
+              .foregroundStyle(by: .value("Value", "Temperature"))
+            }
           } // Chart
           // move depth axis to the left
           .chartYAxis {
@@ -95,6 +112,7 @@ struct DiveSessionView: View {
               // this axis is on top (>0) of the other graph
               AxisMarks(position: .trailing,
                         values: Array(stride(from: maxTemperatureCelcius, through: 0.0, by: -5.0)))
+              // TODO: set a Content
             #endif
           }
 
@@ -126,6 +144,17 @@ struct DiveSessionView: View {
       } // toolbar
     } // NavigationStack
   } // body
+
+  ///
+  func isIntervalGreater(date: Date, interval: TimeInterval) -> Bool {
+    // static let lastDate = Date(timeIntervalSince1970: 0.0)
+    var res = false
+    if interval < abs(lastDate.timeIntervalSince(date)) {
+      res = true
+    }
+    lastDate = date
+    return res
+  }
 }
 
 // MARK: - DiveSessionView_Previews Support
@@ -133,7 +162,6 @@ struct DiveSessionView: View {
 func getPreviewDivesession() -> DiveSession {
   let dateNow = Date.now
   let intervalLength = 2.0 // seconds
-  let intervalDifference = 1.0 // seconds
   let intervalCount = 10
 
   let depthStart = 2.0 // meter
@@ -143,14 +171,44 @@ func getPreviewDivesession() -> DiveSession {
                                                  end: dateNow.addingTimeInterval(intervalLength),
                                                  depth: depthStart))
 
-  // swiftlint:disable:next identifier_name
-  for i in 1 ... intervalCount {
-    let sampleStart = dateNow.addingTimeInterval(Double(i) * (intervalLength + intervalDifference))
-    let sampleEnd = sampleStart + intervalLength
+  var sampleStart = dateNow
+  var sampleEnd = sampleStart + intervalLength
+  var depth = depthStart
+  for _ in 1 ... intervalCount {
     previewDS.add(sample: DiveSample(start: sampleStart,
                                      end: sampleEnd,
-                                     depth: depthStart * Double(i) * depthDescend))
+                                     depth: depth))
+    smLogger.debug("start: \(sampleStart) end:\(sampleEnd) depth:\(depth)")
+    sampleStart = sampleEnd
+    sampleEnd = sampleStart + intervalLength
+    depth += depthDescend
   }
+
+  // add a gap
+
+  // up and wait longer than interval
+  previewDS.add(sample: DiveSample(start: sampleStart,
+                                   end: sampleEnd,
+                                   depth: 1.0))
+
+  sampleStart = sampleEnd
+  sampleEnd = sampleStart + intervalLength
+  sampleStart = sampleEnd
+  sampleEnd = sampleStart + intervalLength
+
+  // start time has a gap now
+
+  // down
+  previewDS.add(sample: DiveSample(start: sampleStart,
+                                   end: sampleEnd,
+                                   depth: 10.0))
+  sampleStart += intervalLength
+  sampleEnd = sampleStart + intervalLength
+
+  // and finally up
+  previewDS.add(sample: DiveSample(start: sampleStart,
+                                   end: sampleEnd,
+                                   depth: 1.0))
 
   return previewDS
 }
