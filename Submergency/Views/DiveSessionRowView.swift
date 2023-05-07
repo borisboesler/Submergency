@@ -26,13 +26,10 @@ struct DiveSessionRowView: View {
     let duration = Int((diveSession.duration() + 59.0) / 60.0)
     HStack {
       Text(DiveSessionRowView.dateFormatter.string(from: diveSession.start))
-        .frame(width: 150, alignment: .leading)
-
+      Spacer()
       Text("\(duration)min")
-        .frame(width: 70, alignment: .trailing)
-
+      Spacer()
       Text(String(format: "%.1fm", diveSession.maxDepth()))
-        .frame(width: 60, alignment: .trailing)
     }
   }
 }

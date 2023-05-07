@@ -34,8 +34,6 @@ struct ContentView: View {
           Spacer()
         }
       } // VStack
-
-      .padding()
       .onAppear {
         diveSessionManager.readSource()
         diveSessionManager.readDiveSamples(maxSecondDelta: diveSessionBreakMinutes * 60.0)
