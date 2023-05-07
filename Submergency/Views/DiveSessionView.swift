@@ -12,6 +12,7 @@ import UniformTypeIdentifiers
 // MARK: - Local config
 
 let displayTemperatureGraph = true
+var lastDate = Date(timeIntervalSince1970: 0.0)
 
 // MARK: - UDDF file type
 
@@ -65,6 +66,15 @@ struct DiveSessionView: View {
             // depth
             ForEach(diveSession.profile) { sample in
               // TODO: fill gaps with time at depth 0m
+              #if false
+                // FIXME: this is false
+                if isIntervalGreater(date: sample.end, interval: 3.0) {
+                  LineMark(
+                    x: .value("Time", sample.end),
+                    y: .value("Depth", 0.0)
+                  )
+                }
+              #endif
               LineMark(
                 x: .value("Time", sample.start),
                 y: .value("Depth", -sample.depth)
@@ -95,6 +105,7 @@ struct DiveSessionView: View {
               // this axis is on top (>0) of the other graph
               AxisMarks(position: .trailing,
                         values: Array(stride(from: maxTemperatureCelcius, through: 0.0, by: -5.0)))
+              // TODO: set a Content
             #endif
           }
 
@@ -126,6 +137,17 @@ struct DiveSessionView: View {
       } // toolbar
     } // NavigationStack
   } // body
+
+  ///
+  func isIntervalGreater(date: Date, interval: TimeInterval) -> Bool {
+    // static let lastDate = Date(timeIntervalSince1970: 0.0)
+    var res = false
+    if interval < abs(lastDate.timeIntervalSince(date)) {
+      res = true
+    }
+    lastDate = date
+    return res
+  }
 }
 
 // MARK: - DiveSessionView_Previews Support
@@ -151,6 +173,30 @@ func getPreviewDivesession() -> DiveSession {
                                      end: sampleEnd,
                                      depth: depthStart * Double(i) * depthDescend))
   }
+  // add a gap
+  #if true
+    /// up and wait longer than interval
+    var num = intervalCount + 3
+    var sampleStart = dateNow.addingTimeInterval(Double(num) * (intervalLength + intervalDifference))
+    var sampleEnd = sampleStart + 2.0 * intervalLength
+    previewDS.add(sample: DiveSample(start: sampleStart,
+                                     end: sampleEnd,
+                                     depth: 1.0))
+    // down
+    num += 1
+    sampleStart = sampleStart.addingTimeInterval(intervalLength)
+    sampleEnd = sampleStart + intervalLength
+    previewDS.add(sample: DiveSample(start: sampleStart,
+                                     end: sampleEnd,
+                                     depth: 10.0))
+    // and finally up
+    num += 1
+    sampleStart = sampleStart.addingTimeInterval(intervalLength)
+    sampleEnd = sampleStart + intervalLength
+    previewDS.add(sample: DiveSample(start: sampleStart,
+                                     end: sampleEnd,
+                                     depth: 1.0))
+  #endif
 
   return previewDS
 }
