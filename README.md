@@ -16,8 +16,8 @@ format](https://www.streit.cc/resources/UDDF/v3.2.3/en/index.html).
 
 ## Screenshots
 
-![Submergency Dive Sessions](images/dive-session-200x433.png "Submergency Dive Sessions")
-![Submergency Dive Chart](images/dive-chart-200x433.png "Submergency Dive Chart")
+![Submergency Dive Sessions](Screenshots/dive-sessions-200x433.png "Submergency Dive Sessions")
+![Submergency Dive Chart](Screenshots/dive-chart-200x433.png "Submergency Dive Chart")
 
 
 ## License
@@ -26,8 +26,8 @@ format](https://www.streit.cc/resources/UDDF/v3.2.3/en/index.html).
 This work is licensed under a [Creative Commons Attribution-Non Commercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 
+[Submergency-logo]: https://github.com/borisboesler/Submergency/raw/main/Screenshots/Submergency-Logo-150x150.png
 
-[Submergency-logo]: https://raw.githubusercontent.com/borisboesler/Submergency/main/Icon/Submergency.png
 [license]: http://creativecommons.org/licenses/by-nc-sa/4.0/
 
 [swift.org]: https://swift.org/

@@ -5,6 +5,9 @@
 ## [Unreleased]
 
 
+<a name="Version/0.1.1"></a>
+## [Version/0.1.1] - 2023-05-19
+
 <a name="Version/0.1.0"></a>
 ## [Version/0.1.0] - 2023-05-19
 ### Bug Fixes
@@ -43,5 +46,6 @@
 <a name="Version/0.0.0"></a>
 ## Version/0.0.0 - 2023-03-19
 
-[Unreleased]: brettkiste:/Volumes/UsersSpace/boesler/projekte/git-repositories/Submergency.git/compare/Version/0.1.0...HEAD
+[Unreleased]: brettkiste:/Volumes/UsersSpace/boesler/projekte/git-repositories/Submergency.git/compare/Version/0.1.1...HEAD
+[Version/0.1.1]: brettkiste:/Volumes/UsersSpace/boesler/projekte/git-repositories/Submergency.git/compare/Version/0.1.0...Version/0.1.1
 [Version/0.1.0]: brettkiste:/Volumes/UsersSpace/boesler/projekte/git-repositories/Submergency.git/compare/Version/0.0.0...Version/0.1.0
