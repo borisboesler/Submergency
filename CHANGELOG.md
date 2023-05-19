@@ -17,6 +17,7 @@
 - General Code Clean-Up
 
 ### Features
+- Add An Icon
 - Embed Code Version
 - Configure Length Of Dive Session Break
 - Display Temperature In Graph
