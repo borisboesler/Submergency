@@ -23,6 +23,7 @@ class UDDFString {
           <name>Boris Boesler</name>
         </manufacturer>
         <version>0</version>
+        <datetime>\(Date.now.ISO8601Format())</datetime>
       <type>converter</type>
       </generator>
       """
